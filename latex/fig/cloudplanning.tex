@@ -1,0 +1,100 @@
+\begin{table*}[h!]
+\caption{Cloud planning matrix}
+\label{tab:cloud-planning-matrix}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{1\textwidth}{!}{%
+    \begin{tabular}{@{}p{3cm} p{6cm} p{6cm} p{6cm} p{6cm}@{}}
+        \toprule
+        \textbf{Time Horizon} & 
+        \textbf{Procurement\newline(Hardware, Facilities)} & 
+        \textbf{Production\newline(Data Center Ops)} & 
+        \textbf{Distribution\newline(Network \& Delivery)} & 
+        \textbf{Sales \& Provisioning\newline(Services)} \\
+        \midrule
+        
+        \parbox[c]{3cm}{\centering \textbf{Long-Term}\newline\textit{(Strategic)}} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ \textcolor{black}{Land \& building strategy}\newline
+            \textbullet\ \textcolor{black}{Plant design}\newline
+            \textbullet\ \textcolor{black}{Energy mix selection}\newline
+            \textbullet\ \textcolor{black}{Long-term vendor selection}
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Capacity planning\newline
+            \textbullet\ Technology roadmap
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Global network design \newline
+            \textbullet\ Edge/PoP placement \newline
+            \textbullet\ Interconnect strategy 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Service portfolio definition 
+        \end{minipage} \\
+        \midrule
+        
+        \parbox[c]{3cm}{\centering \textbf{Mid-Term}\newline\textit{(Tactical)}} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Hardware upgrade scheduling \newline %refresh/
+            \textbullet\ Contract negotiation \newline %renewal/
+            \textbullet\ Budget allocation 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Resource capacity allocation \newline
+            \textbullet\ Data center consolidation \newline
+            \textbullet\ Automation \& orchestration rollout 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Bandwidth scalability \newline
+            \textbullet\ Peering adjustment \newline
+            \textbullet\ Transport/logistics 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Pricing \& promotion \newline
+            \textbullet\ New service introduction/retirement 
+        \end{minipage} \\
+        \midrule
+        
+        \parbox[c]{3cm}{\centering \textbf{Short-Term}\newline\textit{(Operational)}} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Procurement/ordering \newline %Immediate
+            \textbullet\ Incident procurement \newline
+            \textbullet\ Consumables inventory control 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Workload scheduling \newline %provisioning
+            \textbullet\ Monitoring \& maintenance \newline
+            \textbullet\ Security patching 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Traffic management/routing \newline
+            \textbullet\ Network troubleshooting \newline
+            \textbullet\ Edge node adjustment 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Onboarding \& staffing \newline
+            \textbullet\ Service adjustment 
+        \end{minipage} \\
+        \midrule
+        
+        \parbox[c]{3cm}{\centering \textbf{Real-Time}\newline\textit{(Execution)}} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Inbound delivery coordination 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Live server \& rack operation \newline
+            \textbullet\ On-site repair/replacement \newline
+            \textbullet\ Live cooling \& power %operation 
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Live network adjustment \newline
+            \textbullet\ Technician dispatch
+        \end{minipage} 
+        & \begin{minipage}[t]{6cm} \raggedright
+            \textbullet\ Immediate provisioning 
+        \end{minipage} \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table*}

@@ -205,3 +205,14 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific: Generated results and data
+results/
+data/
+
+# Keep results structure but ignore contents (alternative approach)
+# results/*.json
+# results/*.csv
+# results/figures/
+# results/tables/
+# data/*.json
