@@ -57,9 +57,17 @@ def generate_table2_kpi_comparison(
 ) -> pd.DataFrame:
     """Generate Table 2: Baseline vs sustainability-aware KPIs."""
     
+    def sort_sites(opened):
+        def key_fn(s):
+            try:
+                return int(s.lstrip("S"))
+            except ValueError:
+                return s
+        return sorted(opened, key=key_fn)
+
     def get_opened_sites(x_dict: dict) -> str:
         opened = [s for s, v in x_dict.items() if abs(v) > 0.5]
-        return ", ".join(sorted(opened))
+        return ", ".join(sort_sites(opened))
     
     rows = []
     baseline_sites = get_opened_sites(baseline_sol["x"])
@@ -86,48 +94,27 @@ def generate_table2_kpi_comparison(
         "Sites Opened": sum(1 for v in capped_sol["x"].values() if abs(v) > 0.5),
     })
     
-    # Scalarized - find low-weight and high-weight examples
+    # Scalarized - report a high-weight example
     if scalarized_results:
-        # Find lambda_c=0, lambda_w=0 (should match baseline)
-        low_weight = None
         high_weight = None
         high_weight_sites = None
         
         for result in scalarized_results:
             lc, lw, obj, cost, co2, water = result
-            if lc == 0.0 and lw == 0.0:
-                low_weight = result
             if lc == 50.0 and lw == 50.0:
                 high_weight = result
-        
-        # If not found, pick first and last
-        if not low_weight and scalarized_results:
-            low_weight = scalarized_results[0]
-        if not high_weight and scalarized_results:
-            high_weight = scalarized_results[-1]
-        
-        if low_weight:
-            lc, lw, obj, cost, co2, water = low_weight
-            rows.append({
-                "Model Variant": f"Scalarized (λ_C={lc:.0f}, λ_W={lw:.0f})",
-                # With λ=0,0 the scalarized solution coincides with the baseline.
-                "Selected Sites": baseline_sites,
-                "Total Cost": f"{cost:.2f}",
-                "Total CO₂": f"{co2:.2f}",
-                "Total Water": f"{water:.2f}",
-                "Latency Proxy": "N/A",
-                "Sites Opened": "N/A",
-            })
-        
-        if high_weight and high_weight != low_weight:
+
+        if high_weight:
             lc, lw, obj, cost, co2, water = high_weight
             # Solve once to recover site openings for reporting
             try:
                 sol_hw = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=0)
                 high_weight_sites = get_opened_sites(sol_hw.x)
                 high_weight_opened = sum(1 for v in sol_hw.x.values() if abs(v) > 0.5)
+                high_latency = f"{sol_hw.total_latency_proxy:.2f}" if sol_hw.total_latency_proxy is not None else "N/A"
             except Exception:
                 high_weight_opened = "N/A"
+                high_latency = "N/A"
             
             rows.append({
                 "Model Variant": f"Scalarized (λ_C={lc:.0f}, λ_W={lw:.0f})",
@@ -135,7 +122,7 @@ def generate_table2_kpi_comparison(
                 "Total Cost": f"{cost:.2f}",
                 "Total CO₂": f"{co2:.2f}",
                 "Total Water": f"{water:.2f}",
-                "Latency Proxy": "N/A",
+                "Latency Proxy": high_latency,
                 "Sites Opened": high_weight_opened if high_weight_sites else "N/A",
             })
     

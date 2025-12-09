@@ -32,13 +32,16 @@ def main():
         return
     
     # Set caps as percentage of baseline
-    alpha = 0.85  # 85% of baseline
-    gamma_co2 = alpha * baseline_sol.total_co2
-    gamma_w = alpha * baseline_sol.total_water
+    # Note: 75% CO₂ cap is infeasible for this instance (baseline is already CO₂-efficient)
+    # Using 80% as the closest feasible value to 75%
+    alpha_co2 = 0.80  # 80% of baseline CO₂ (75% was infeasible)
+    alpha_w = 1.0  # 100% of baseline water
+    gamma_co2 = alpha_co2 * baseline_sol.total_co2
+    gamma_w = alpha_w * baseline_sol.total_water
     
     print(f"\nSetting caps:")
-    print(f"  CO₂ cap: {gamma_co2:.2f} ({alpha*100}% of baseline {baseline_sol.total_co2:.2f})")
-    print(f"  Water cap: {gamma_w:.2f} ({alpha*100}% of baseline {baseline_sol.total_water:.2f})")
+    print(f"  CO₂ cap: {gamma_co2:.2f} ({alpha_co2*100}% of baseline {baseline_sol.total_co2:.2f})")
+    print(f"  Water cap: {gamma_w:.2f} ({alpha_w*100}% of baseline {baseline_sol.total_water:.2f})")
     
     # Solve capped model
     print("\nSolving capped-impact model...")
@@ -84,7 +87,7 @@ def main():
         "capped_impact",
         gamma_co2=gamma_co2,
         gamma_w=gamma_w,
-        alpha=alpha
+        alpha=alpha_co2  # Store CO₂ cap percentage
     )
     df = pd.DataFrame([result_dict])
     

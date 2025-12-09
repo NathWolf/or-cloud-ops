@@ -210,6 +210,16 @@ __marimo__/
 results/
 data/
 
+# LaTeX folder (project-specific)
+latex/
+
+# Plots script (project-specific)
+plots.py
+**/plots.py
+
+# Matplotlib cache
+.mpl/
+
 # Keep results structure but ignore contents (alternative approach)
 # results/*.json
 # results/*.csv
