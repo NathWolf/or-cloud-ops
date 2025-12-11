@@ -8,7 +8,7 @@ import json
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.cflp import CFLPInstance, CFLPSolution
-from src.utils import load_instance
+from src.utils import load_instance, FIXED_SITES
 import pandas as pd
 from src.plots import (
     extract_coordinates,
@@ -27,6 +27,7 @@ from src.plots import (
     plot_objective_breakdown_stacked,
     plot_site_utilization,
     plot_impact_per_region,
+    plot_impact_per_site,
     plot_cost_breakdown_by_site,
     plot_site_selection_comparison,
     plot_site_flows,
@@ -111,7 +112,7 @@ def main():
     # Always load scalarized solution (lambda=50,50) - generate it if needed
     print("Loading scalarized solution (lambda=50,50)...")
     from src.models.cflp import solve_scalarized
-    scalarized_sol = solve_scalarized(inst, lambda_c=50.0, lambda_w=50.0, output_flag=0)
+    scalarized_sol = solve_scalarized(inst, lambda_c=50.0, lambda_w=50.0, output_flag=0, fixed_sites=FIXED_SITES)
     if scalarized_sol.status == 2:
         print(f"   Scalarized solution loaded successfully (status: optimal)")
     else:
@@ -242,6 +243,12 @@ def main():
         print("\n15. Generating impact per region plots...")
         plot_impact_per_region(inst, baseline_sol, capped_sol, scalarized_sol, str(figures_dir))
         print(f"   Saved to {figures_dir / 'fig_co2_per_region.png'} and fig_water_per_region.png")
+    
+    # 15b. Impact per site
+    if baseline_sol and capped_sol:
+        print("\n15b. Generating impact per site plots...")
+        plot_impact_per_site(inst, baseline_sol, capped_sol, scalarized_sol, str(figures_dir))
+        print(f"   Saved to {figures_dir / 'fig_co2_per_site.png'} and fig_water_per_site.png")
     
     # 16. Cost breakdown by site
     if baseline_sol and capped_sol:

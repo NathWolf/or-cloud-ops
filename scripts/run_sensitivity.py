@@ -8,7 +8,7 @@ import json
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.cflp import make_toy_instance, solve_baseline, solve_capped_impact
-from src.utils import save_instance, load_instance
+from src.utils import save_instance, load_instance, FIXED_SITES
 
 
 def main():
@@ -24,7 +24,7 @@ def main():
     
     # Solve baseline to get reference values
     print("\nSolving baseline model for reference...")
-    baseline_sol = solve_baseline(inst, output_flag=0)
+    baseline_sol = solve_baseline(inst, output_flag=0, fixed_sites=FIXED_SITES)
     
     if baseline_sol.total_co2 is None or baseline_sol.total_water is None:
         print("ERROR: Baseline solution is invalid.")
@@ -47,7 +47,8 @@ def main():
             inst,
             gamma_co2=gamma_co2,
             gamma_w=gamma_w,
-            output_flag=0
+            output_flag=0,
+            fixed_sites=FIXED_SITES
         )
         
         if sol.status == 2 and sol.total_cost is not None:  # Optimal

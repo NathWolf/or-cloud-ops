@@ -219,6 +219,10 @@ plots.py
 
 # Matplotlib cache
 .mpl/
+.mplcache/
+
+# macOS
+.DS_Store
 
 # Keep results structure but ignore contents (alternative approach)
 # results/*.json

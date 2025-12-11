@@ -1,12 +1,20 @@
-# Sustainable Cloud Siting – Numerical Analysis (Toy CFLP)
+# Sustainable Cloud Operations – Optimization Models
 
-This project implements the numerical analysis section for the paper:
-a **Capacitated Facility Location Problem (CFLP)** for data-center siting with
-(a) a **baseline** model, (b) **usage-based CO₂/water caps**, and (c) a **scalarized**
-objective to explore trade-offs.
+This repository contains optimization models for sustainable cloud operations, with each model addressing different aspects of cloud infrastructure planning and operations. Each model includes sustainability considerations tailored to its specific problem domain.
+
+## Current Model: Facility Location (CFLP)
+
+This project currently implements a **Capacitated Facility Location Problem (CFLP)** for data-center siting with:
+- (a) a **baseline** model
+- (b) **usage-based CO₂/water caps**
+- (c) a **scalarized** objective to explore trade-offs
 
 The intent is **illustrative**: a small toy instance to show how sustainability
 constraints and/or internalization of impacts changes the siting/allocation solution.
+
+### Future Models
+
+This is the first model in a planned collection. Future models will address other cloud operations problems, each with their own sustainability considerations and constraints.
 
 ---
 
@@ -208,9 +216,18 @@ Avoid claiming real-world calibration unless you actually calibrate.
 
 ---
 
-## 9) Next extensions (optional)
+## 9) Future models and extensions
 
-If you later want a richer demonstration:
+### Planned Models
+This repository will expand to include additional cloud operations models, each with sustainability considerations:
+- **Workload scheduling and allocation** models
+- **Resource provisioning** models
+- **Multi-cloud optimization** models
+- Other cloud operations problems with tailored sustainability constraints
+
+### Location Model Extensions (optional)
+
+If you later want a richer demonstration of the location model:
 - Add a **resilience constraint** (e.g., each region must be served by at least 2 sites)
 - Add **multi-period opening** (strategic realism)
 - Add **time-varying carbon intensity** (hourly grid mix)

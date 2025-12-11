@@ -104,11 +104,13 @@ def build_baseline_model(
     *,
     model_name: str = "cflp_baseline",
     output_flag: int = 0,
+    fixed_sites: Optional[List[Site]] = None,
 ) -> Tuple[gp.Model, gp.tupledict, gp.tupledict]:
     """
     Builds the baseline CFLP model:
       min Σ (F+O)x + φ Σ c y
       s.t. demand, capacity, bounds
+      + optionally: x[i] = 1 for fixed_sites
     Returns (model, x_vars, y_vars).
     """
     inst.validate()
@@ -121,6 +123,12 @@ def build_baseline_model(
     # Variables
     x = m.addVars(inst.I, vtype=GRB.BINARY, name="x")
     y = m.addVars(arcs, lb=0.0, vtype=GRB.CONTINUOUS, name="y")
+
+    # Fix certain sites to be always open
+    if fixed_sites:
+        for i in fixed_sites:
+            if i in inst.I:
+                m.addConstr(x[i] == 1, name=f"fix_site[{i}]")
 
     # Objective
     fixed_and_oper = gp.quicksum((inst.F[i] + inst.O[i]) * x[i] for i in inst.I)
@@ -246,8 +254,9 @@ def solve_baseline(
     *,
     output_flag: int = 0,
     time_limit_s: Optional[float] = None,
+    fixed_sites: Optional[List[Site]] = None,
 ) -> CFLPSolution:
-    m, x, y = build_baseline_model(inst, model_name="baseline", output_flag=output_flag)
+    m, x, y = build_baseline_model(inst, model_name="baseline", output_flag=output_flag, fixed_sites=fixed_sites)
     return solve_and_extract(m, inst, x, y, time_limit_s=time_limit_s)
 
 
@@ -258,8 +267,9 @@ def solve_capped_impact(
     gamma_w: float,
     output_flag: int = 0,
     time_limit_s: Optional[float] = None,
+    fixed_sites: Optional[List[Site]] = None,
 ) -> CFLPSolution:
-    m, x, y = build_baseline_model(inst, model_name="capped_impact", output_flag=output_flag)
+    m, x, y = build_baseline_model(inst, model_name="capped_impact", output_flag=output_flag, fixed_sites=fixed_sites)
     add_usage_caps(m, inst, y, gamma_co2=gamma_co2, gamma_w=gamma_w)
     return solve_and_extract(m, inst, x, y, time_limit_s=time_limit_s)
 
@@ -271,8 +281,9 @@ def solve_scalarized(
     lambda_w: float,
     output_flag: int = 0,
     time_limit_s: Optional[float] = None,
+    fixed_sites: Optional[List[Site]] = None,
 ) -> CFLPSolution:
-    m, x, y = build_baseline_model(inst, model_name="scalarized", output_flag=output_flag)
+    m, x, y = build_baseline_model(inst, model_name="scalarized", output_flag=output_flag, fixed_sites=fixed_sites)
     set_scalarized_objective(m, inst, x, y, lambda_c=lambda_c, lambda_w=lambda_w)
     return solve_and_extract(m, inst, x, y, time_limit_s=time_limit_s)
 
@@ -283,6 +294,7 @@ def pareto_scan_scalarized(
     *,
     output_flag: int = 0,
     time_limit_s: Optional[float] = None,
+    fixed_sites: Optional[List[Site]] = None,
 ) -> List[Tuple[float, float, float, float]]:
     """
     Runs scalarized model over a grid of (lambda_c, lambda_w).
@@ -291,7 +303,7 @@ def pareto_scan_scalarized(
     """
     results = []
     for (lc, lw) in lambda_grid:
-        sol = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=output_flag, time_limit_s=time_limit_s)
+        sol = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=output_flag, time_limit_s=time_limit_s, fixed_sites=fixed_sites)
         results.append((sol.obj if sol.obj is not None else float("nan"),
                         sol.total_cost if sol.total_cost is not None else float("nan"),
                         sol.total_co2 if sol.total_co2 is not None else float("nan"),

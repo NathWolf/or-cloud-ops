@@ -7,7 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.cflp import make_toy_instance, solve_baseline
-from src.utils import save_instance, solution_to_dict
+from src.utils import save_instance, solution_to_dict, FIXED_SITES
 import pandas as pd
 import json
 
@@ -25,7 +25,7 @@ def main():
     
     # Solve baseline
     print("\nSolving baseline model...")
-    sol = solve_baseline(inst, output_flag=1)
+    sol = solve_baseline(inst, output_flag=1, fixed_sites=FIXED_SITES)
     
     # Print results
     print("\n" + "="*60)

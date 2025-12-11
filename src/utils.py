@@ -1,9 +1,41 @@
 """Utility functions for saving/loading instances and results."""
 import json
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 from pathlib import Path
 
 from src.models.cflp import CFLPInstance, CFLPSolution
+
+# Fixed sites that are always chosen (will be renamed to C1-C5)
+FIXED_SITES = ["S2", "S5", "S6", "S8", "S9"]
+
+
+def get_site_label_mapping(inst: CFLPInstance) -> Tuple[Dict[str, str], Dict[str, str]]:
+    """
+    Create mapping from original site IDs to new labels.
+    Fixed sites (S2, S5, S6, S8, S9) -> C1, C2, C3, C4, C5
+    Potential sites (others) -> S1, S2, S3, S4, S5
+    
+    Returns:
+        (site_to_label, label_to_site) - bidirectional mapping dictionaries
+    """
+    site_to_label = {}
+    label_to_site = {}
+    
+    # First, map fixed sites to C1-C5
+    fixed_sites_sorted = sorted([s for s in inst.I if s in FIXED_SITES])
+    for idx, site in enumerate(fixed_sites_sorted, 1):
+        label = f"C{idx}"
+        site_to_label[site] = label
+        label_to_site[label] = site
+    
+    # Then, map potential sites to S1-S5
+    potential_sites = sorted([s for s in inst.I if s not in FIXED_SITES])
+    for idx, site in enumerate(potential_sites, 1):
+        label = f"S{idx}"
+        site_to_label[site] = label
+        label_to_site[label] = site
+    
+    return site_to_label, label_to_site
 
 
 def save_instance(inst: CFLPInstance, filepath: str) -> None:

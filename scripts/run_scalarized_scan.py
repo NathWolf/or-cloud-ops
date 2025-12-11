@@ -7,7 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.cflp import make_toy_instance, pareto_scan_scalarized, solve_scalarized, CFLPSolution
-from src.utils import save_instance, solution_to_dict, load_instance
+from src.utils import save_instance, solution_to_dict, load_instance, FIXED_SITES
 import pandas as pd
 import json
 import itertools
@@ -34,7 +34,7 @@ def main():
     print(f"Lambda_W values: {lambda_w_values}")
     
     # Run scan
-    results = pareto_scan_scalarized(inst, lambda_grid, output_flag=0)
+    results = pareto_scan_scalarized(inst, lambda_grid, output_flag=0, fixed_sites=FIXED_SITES)
     
     # Prepare results for CSV
     results_list = []
@@ -43,7 +43,7 @@ def main():
     for (lc, lw), (obj, cost, co2, water) in zip(lambda_grid, results):
         # Solve again to get full solution for one representative point
         if lc == 10.0 and lw == 10.0:
-            sol = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=0)
+            sol = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=0, fixed_sites=FIXED_SITES)
             scalarized_sol = sol
         else:
             scalarized_sol = None
