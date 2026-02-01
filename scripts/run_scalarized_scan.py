@@ -7,7 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.cflp import make_toy_instance, pareto_scan_scalarized, solve_scalarized, CFLPSolution
-from src.utils import save_instance, solution_to_dict, load_instance, FIXED_SITES
+from src.utils import save_instance, solution_to_dict, load_instance, EXISTING_SITES
 import pandas as pd
 import json
 import itertools
@@ -20,13 +20,13 @@ def main():
         print(f"Loading instance from {instance_path}...")
         inst = load_instance(str(instance_path))
     else:
-        print("Generating new toy instance...")
-        inst = make_toy_instance(n_sites=10, n_regions=8, seed=3, phi=10.0)
+        print("Generating new toy instance with split demand...")
+        inst = make_toy_instance(n_sites=10, n_regions=8, seed=3, phi=10.0, use_split_demand=True)
         save_instance(inst, str(instance_path))
     
-    # Define lambda grid
-    lambda_c_values = [0, 1, 5, 10, 25, 50]
-    lambda_w_values = [0, 1, 5, 10, 25, 50]
+    # Define lambda grid (expanded as per requirements)
+    lambda_c_values = [0, 1, 5, 10, 25, 50, 100]
+    lambda_w_values = [0, 1, 5, 10, 25, 50, 100]
     lambda_grid = list(itertools.product(lambda_c_values, lambda_w_values))
     
     print(f"\nRunning scalarized scan over {len(lambda_grid)} lambda combinations...")
@@ -34,7 +34,7 @@ def main():
     print(f"Lambda_W values: {lambda_w_values}")
     
     # Run scan
-    results = pareto_scan_scalarized(inst, lambda_grid, output_flag=0, fixed_sites=FIXED_SITES)
+    results = pareto_scan_scalarized(inst, lambda_grid, output_flag=0, existing_sites=EXISTING_SITES)
     
     # Prepare results for CSV
     results_list = []
@@ -43,7 +43,7 @@ def main():
     for (lc, lw), (obj, cost, co2, water) in zip(lambda_grid, results):
         # Solve again to get full solution for one representative point
         if lc == 10.0 and lw == 10.0:
-            sol = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=0, fixed_sites=FIXED_SITES)
+            sol = solve_scalarized(inst, lambda_c=lc, lambda_w=lw, output_flag=0, existing_sites=EXISTING_SITES)
             scalarized_sol = sol
         else:
             scalarized_sol = None

@@ -7,15 +7,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.cflp import make_toy_instance, solve_baseline
-from src.utils import save_instance, solution_to_dict, FIXED_SITES
+from src.utils import save_instance, solution_to_dict, EXISTING_SITES
 import pandas as pd
 import json
 
 
 def main():
     # Generate or load instance
-    print("Generating toy instance...")
-    inst = make_toy_instance(n_sites=10, n_regions=8, seed=3, phi=10.0)
+    print("Generating toy instance with split demand...")
+    inst = make_toy_instance(n_sites=10, n_regions=8, seed=3, phi=10.0, use_split_demand=True)
     
     # Save instance for reproducibility
     instance_path = Path("data/toy_instance.json")
@@ -25,7 +25,7 @@ def main():
     
     # Solve baseline
     print("\nSolving baseline model...")
-    sol = solve_baseline(inst, output_flag=1, fixed_sites=FIXED_SITES)
+    sol = solve_baseline(inst, output_flag=1, existing_sites=EXISTING_SITES)
     
     # Print results
     print("\n" + "="*60)
