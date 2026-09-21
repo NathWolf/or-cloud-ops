@@ -24,7 +24,7 @@ def table(out,name,caption,label,cols,rows,spec):
  (out/(name+'.tex')).write_text('\n'.join(text)+'\n')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--results-dir',default='artifacts/revision_2026_09_21');p.add_argument('--output-dir',required=True);p.add_argument('--commitment-dir',default='artifacts/commitment_review_2026_09_21');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--results-dir',default='artifacts/revision_2026_09_21');p.add_argument('--output-dir',required=True);p.add_argument('--commitment-dir',default='artifacts/commitment_review_2026_09_21');p.add_argument('--diagnostic-dir',default='artifacts/handoff_diagnostics_2026_09_21');a=p.parse_args()
  root=Path(a.results_dir);out=Path(a.output_dir);out.mkdir(parents=True,exist_ok=True)
  regimes=pd.read_csv(root/'planning_regime_comparison.csv'); audit=pd.read_csv(root/'handoff_audit.csv');seed=pd.read_csv(root/'seed_sensitivity.csv');cap=pd.read_csv(root/'cap_sweep.csv');acc=pd.read_csv(root/'accounting_experiments.csv');duals=pd.read_csv(root/'shadow_prices.csv')
  b=regimes.iloc[0];h=regimes.iloc[2];price=regimes.iloc[3];robust=audit[audit.experiment=='Scenario-wise targets / replan'].iloc[0]
@@ -54,6 +54,13 @@ def main():
                f'{int((samples.status==2).sum())}/{len(samples)}'])
  table(out,'table_revision_commitments','Feasibility after revising infrastructure decisions.','tab:commitment-review',
        ['Decisions reopened','Fixed','Reference case','Cost increase','Runs meeting targets'],rows,'llrrr')
+ diagnostic=pd.read_csv(Path(a.diagnostic_dir)/'diagnostics.csv').set_index('case')
+ rows=[]
+ for label,case in [('Allocation only','allocation_only'),('Capacity and allocation','capacity_only'),('Links and allocation','links_only')]:
+  r=diagnostic.loc[case]
+  rows.append([label]+[f'{100*r[k]:.2f}' for k in ['carbon_excess','winter_water_excess','spring_water_excess','summer_water_excess','autumn_water_excess']])
+ table(out,'table_revision_diagnostics','Target excess in minimum-excess allocations.','tab:handoff-diagnostics',
+       ['Decisions reopened',r'\makecell{Carbon\\(\%)}',r'\makecell{Winter water\\(\%)}',r'\makecell{Spring water\\(\%)}',r'\makecell{Summer water\\(\%)}',r'\makecell{Autumn water\\(\%)}'],rows,'lrrrrr')
  labels={'location_time':'Seasonal, unadjusted','location_annual':'Annual, unadjusted','market_time':'Seasonal, adjusted','market_annual':'Annual, adjusted'}
  rows=[]
  for _,r in acc[acc.accounting_experiment=='cap_85'].iterrows():

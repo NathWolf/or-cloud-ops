@@ -28,6 +28,7 @@ jobs:
           python scripts/check_release.py
           python scripts/verify_revision.py artifacts/revision_2026_09_21
           python scripts/run_commitment_review.py --verify-only --output-dir artifacts/commitment_review_2026_09_21
+          python scripts/run_handoff_diagnostics.py --verify-only --output-dir artifacts/handoff_diagnostics_2026_09_21
       - name: Run the small smoke instance
         # Uses the restricted small-model license bundled with gurobipy.
         # No solver credentials or repository secrets are required.
@@ -41,6 +42,15 @@ jobs:
           reproduced = pd.read_csv('results/commitment_review_ci/commitment_review.csv').set_index(['seed', 'case'])
           assert (reference.status == reproduced.status).all()
           assert (reference.economic_cost - reproduced.economic_cost).abs().max() < 1e-6
+          PYTHON
+      - name: Reproduce minimum-excess diagnostic
+        run: |
+          python scripts/run_handoff_diagnostics.py --output-dir results/handoff_diagnostics_ci
+          python - <<'PYTHON'
+          import pandas as pd
+          reference = pd.read_csv('artifacts/handoff_diagnostics_2026_09_21/diagnostics.csv').set_index('case')
+          reproduced = pd.read_csv('results/handoff_diagnostics_ci/diagnostics.csv').set_index('case')
+          assert (reference - reproduced).abs().max().max() < 1e-6
           PYTHON
       - name: Install figure-rendering dependencies
         run: |

@@ -9,9 +9,11 @@ Run commands from the repository root. The frozen reference archive is `artifact
 | Main experiment grid | `python scripts/run_hierarchical_experiments.py --require-public-data --output-dir results/revision_2026_09_21` | Regimes, price/cap sweeps, accounting comparisons and saved solutions |
 | Contract and uncertainty audit | `python scripts/run_revision_audit.py --results-dir results/revision_2026_09_21` | Frozen-plan, scenario-wise, stress and seed tests |
 | Independent checks | `python scripts/verify_revision.py results/revision_2026_09_21` | Fail-fast residual, objective and comparison assertions |
-| Figure/table export | `python scripts/export_revision.py --results-dir results/revision_2026_09_21 --output-dir results/reproduced_figures` | Two main figures and one supplementary figure with plotted-value CSVs, four tables and numerical LaTeX macros |
+| Commitment revisions | `python scripts/run_commitment_review.py --reference-dir results/revision_2026_09_21 --output-dir results/commitment_review` | Five revision scopes across ten demand variants |
+| Target-excess diagnostics | `python scripts/run_handoff_diagnostics.py --reference-dir results/revision_2026_09_21 --output-dir results/handoff_diagnostics` | Joint minimum-excess allocations for five reference scopes |
+| Figure/table export | `python scripts/export_revision.py --results-dir results/revision_2026_09_21 --commitment-dir results/commitment_review --diagnostic-dir results/handoff_diagnostics --output-dir results/reproduced_figures` | Two main figures and one supplementary figure with plotted-value CSVs, five tables and numerical LaTeX macros |
 
-`python scripts/run_all.py --figure-dir results/reproduced_figures` runs all four steps. `--quick` uses a smaller instance and does not run the full audit or export figures. Its results do not support the manuscript's numerical claims.
+`python scripts/run_all.py --figure-dir results/reproduced_figures` runs the complete pipeline. `--quick` uses a smaller instance and does not run the full audit or export figures. Its results do not support the manuscript's numerical claims.
 
 ## Reference results
 
@@ -62,7 +64,7 @@ Verify saved cases with `python scripts/run_commitment_review.py --verify-only -
 
 ## Interpreting the commitment table
 
-“Runs meeting targets” counts feasible planning problems, not successful software executions. A seed selects a reproducible demand perturbation of at most 1.5%; it is not a separate observed network. For each seed, the cost-only solution supplies the fixed commitments and the reference impacts. Every revision case must serve the same demand while reducing expected carbon by 15% and expected water by 10% in each season.
+“Runs meeting targets” counts feasible planning problems, not successful software executions. A seed selects a reproducible demand perturbation of at most 1.5%; it is not a separate observed network. For each seed, the cost-only solution supplies the fixed commitments and the reference impacts. Every revision case must serve the same demand while reducing expected carbon by 15% and expected water by 10% in each season. These reductions are illustrative stress-test levels, not policy or operator targets.
 
 - **Allocation only:** sites, capacity and links remain fixed. No compliant allocation exists in any of the ten runs.
 - **Capacity and allocation:** links remain fixed, so more capacity cannot create access to another site. All ten cases are infeasible.
@@ -71,6 +73,19 @@ Verify saved cases with `python scripts/run_commitment_review.py --verify-only -
 - **All decisions:** all infrastructure choices can change. All ten cases meet the targets; allowing site changes brings no further cost reduction.
 
 The saved infeasible cases have solver status 3 (`INFEASIBLE`), not a time-limit status. The result identifies a restricted revision scope that cannot meet the chosen targets. It does not establish that both types of revision are necessary for every network or target.
+
+## Minimum-excess feedback
+
+The diagnostic keeps service and physical constraints hard, retains commitments outside the permitted revision scope, and minimizes the sum of carbon and four seasonal-water excesses divided by their respective targets. All five terms have equal weight. Cost is not the diagnostic objective. Reported components belong to one joint optimum; they are not separately minimized lower bounds.
+
+With allocation alone or capacity plus allocation, carbon exceeds its target by 17.65% and each water target by 11.11%; the dimensionless sum is 0.620915. Revising links plus allocation lowers the sum to 0.281460: carbon excess is 11.85%, and seasonal water excesses are 3.00%, 4.34%, 6.88% and 2.07%. Reopening capacity and links, or all decisions, gives zero. These reference-instance results supply feedback for a rejected handoff; they do not relax the acceptance targets.
+
+```sh
+python scripts/run_handoff_diagnostics.py --verify-only --output-dir artifacts/handoff_diagnostics_2026_09_21
+python scripts/run_handoff_diagnostics.py --output-dir results/handoff_diagnostics
+```
+
+The five saved solutions, CSV, source/input hashes and checksums are in `artifacts/handoff_diagnostics_2026_09_21/`. Local Gurobi 12.0.3 and Linux Gurobi 13.0.2 agree on the joint objective and each excess component to within 1.3e-15. Verification reconstructs impacts, checks service residuals and retained commitments, and compares the excess sum with the recorded objective. It does not independently prove optimality without rerunning the solver. Use `export_revision.py --diagnostic-dir PATH` to select diagnostic outputs for the manuscript table.
 
 ## Assumed accounting-factor reductions
 
@@ -125,11 +140,11 @@ Divide the raw carbon multipliers by their equal-period mean (1.0325). This pres
 | Base | 0.50 | 1.00 | 1.000 | 1.00 |
 | High | 0.25 | 1.16 | 1.056 | 1.10 |
 
-The scenario carbon multiplier is `1 + 0.35 * (demand_multiplier - 1)`. Multiply each site's base coefficient by both its period and scenario multipliers. Demand receives a uniform multiplicative perturbation between 0.985 and 1.015 for each region, period and scenario; inference and training share that region-period-scenario draw. Seed 11 defines the reference instance; seeds 11–20 define the ten commitment tests. All seasonal/scenario multipliers and probabilities are assumed, not fitted observations.
+The scenario carbon multiplier is `1 + 0.35 * (demand_multiplier - 1)`. Multiply each site's base coefficient by both its period and scenario multipliers. Demand receives an independent uniform multiplicative perturbation between 0.985 and 1.015 for each region, period and scenario; inference and training share that region-period-scenario draw. Seed 11 defines the reference instance; seeds 11–20 define the ten commitment tests. All seasonal/scenario multipliers and probabilities are assumed, not fitted observations.
 
 Inference links are admissible up to 900 km and training links up to 2200 km in great-circle distance. Activation is optimized within that fixed admissible set. No routing, congestion, bandwidth or endogenous network topology is represented. Capacity is service volume per period. Allocation has perfect information about the scenario, and training cannot move between periods.
 
-Direct-water inputs are assumed litres per normalized unit; water-stress indices are not converted into water use or permits. Water limits apply to the portfolio in each season, not to individual basins. Prices and costs are arbitrary planning units. These inputs cannot support estimates of operator expenditure, real-world water savings or legal compliance.
+Base direct-water inputs range from 0.21 to 0.58 litres per service unit (0.1764–0.85492 after period/scenario adjustment); water-stress indices are not converted into water use or permits. Water limits apply to the portfolio in each season, not to individual basins. Prices and costs are arbitrary planning units. These inputs cannot support estimates of operator expenditure, real-world water savings or legal compliance.
 
 ## Supporting comparisons and verification
 

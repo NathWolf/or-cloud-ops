@@ -9,7 +9,7 @@ def main():
  result=a.output_dir or ('results/revision_smoke' if a.quick else 'results/revision_2026_09_21')
  commands=[['scripts/run_hierarchical_experiments.py','--require-public-data','--output-dir',result]+(['--quick'] if a.quick else [])]
  if not a.quick:
-  commands += [['scripts/run_revision_audit.py','--results-dir',result],['scripts/verify_revision.py',result],['scripts/run_commitment_review.py','--reference-dir',result,'--output-dir',str(Path(result)/'commitment_review')],['scripts/export_revision.py','--results-dir',result,'--output-dir',a.figure_dir,'--commitment-dir',str(Path(result)/'commitment_review')]]
+  commands += [['scripts/run_revision_audit.py','--results-dir',result],['scripts/verify_revision.py',result],['scripts/run_commitment_review.py','--reference-dir',result,'--output-dir',str(Path(result)/'commitment_review')],['scripts/run_handoff_diagnostics.py','--reference-dir',result,'--output-dir',str(Path(result)/'handoff_diagnostics')],['scripts/export_revision.py','--results-dir',result,'--output-dir',a.figure_dir,'--commitment-dir',str(Path(result)/'commitment_review'),'--diagnostic-dir',str(Path(result)/'handoff_diagnostics')]]
  env=os.environ.copy();env.setdefault('MPLCONFIGDIR',str(root/'results/.mplcache'))
  for command in commands:subprocess.run([sys.executable,*command],cwd=root,env=env,check=True)
  print('Complete:',result)

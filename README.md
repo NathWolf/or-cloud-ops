@@ -47,7 +47,7 @@ MPLCONFIGDIR=results/.mplcache python scripts/export_revision.py \
   --output-dir results/reproduced_figures
 ```
 
-The reference commitment-revision tests are in `artifacts/commitment_review_2026_09_21/`; see [the experiment guide](docs/EXPERIMENTS.md) for verification and rerun commands.
+The reference commitment-revision tests are in `artifacts/commitment_review_2026_09_21/`, and minimum-excess diagnostics are in `artifacts/handoff_diagnostics_2026_09_21/`; see [the experiment guide](docs/EXPERIMENTS.md) for verification and rerun commands.
 
 The reference figures are in [`latex/fig/`](latex/fig/), with filenames starting `fig_revision_`. Older tracked figures correspond to the earlier one-period illustration.
 
@@ -62,7 +62,7 @@ The quick command runs a smaller smoke instance under `results/revision_smoke/`;
 
 - Cost-only, expected-target and internal-price regimes, including a 49-pair price grid.
 - Carbon and water sweeps, common-cap accounting comparisons and interconnection sensitivity.
-- Frozen-infrastructure acceptance and infeasibility diagnosis.
+- Frozen-infrastructure acceptance, controlled commitment revisions and minimum-excess diagnostics.
 - Scenario-wise environmental constraints, demand stresses and ten demand-perturbation seeds.
 - Independent residual checks, tables and consistent vector figures.
 
@@ -83,6 +83,7 @@ The main regime, carbon sweep, handoff and seed results were reproduced locally 
 | `src/analysis_hierarchical.py` | Numerical summaries and experiment comparisons |
 | `scripts/run_all.py` | Complete reproduction entry point |
 | `scripts/verify_revision.py` | Verification of saved solutions without solving |
+| `scripts/run_handoff_diagnostics.py` | Joint minimum-excess diagnostic for five revision scopes |
 | `scripts/export_revision.py` | Publication figures, tables and numerical macros |
 | `data/public/` | Eight frozen public observations, attribution and provenance |
 | `artifacts/revision_2026_09_21/` | Reference instance, solutions, tables and manifests |

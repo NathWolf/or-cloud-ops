@@ -18,6 +18,8 @@ def main():
         'src/models/hierarchical.py', 'src/contract_audit.py',
         'scripts/run_all.py', 'scripts/verify_revision.py',
         'scripts/export_revision.py', 'scripts/run_commitment_review.py',
+        'scripts/run_handoff_diagnostics.py',
+        'artifacts/handoff_diagnostics_2026_09_21/SHA256SUMS.json',
         'artifacts/commitment_review_2026_09_21/SHA256SUMS.json', '.github/workflows/reproducibility.yml',
     ]
     for name in required:
