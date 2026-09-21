@@ -1,0 +1,7 @@
+{
+  "download_sha256": "259e1095ee8ffeaf0aff37ad557916ae1823a2da13312da50ba4cec6b4574c3b",
+  "selection": "Year == 2024 and Variable == CO2 intensity; eight named countries",
+  "transformation": "gCO2/kWh divided by 1000; 1 kWh facility electricity per normalized service unit",
+  "boundary": "Lifecycle electricity-generation proxy, not Scope 2",
+  "retrieved": "2026-09-21"
+}

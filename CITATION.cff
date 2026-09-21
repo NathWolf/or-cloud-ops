@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "Please cite this software and the associated manuscript when using the experiments."
+type: software
+title: "or-cloud-ops: Reproducible experiments for sustainable cloud planning"
+authors:
+  - family-names: Wolf
+    given-names: Nathalia
+repository-code: "https://github.com/NathWolf/or-cloud-ops"
+url: "https://github.com/NathWolf/or-cloud-ops"
+license: MIT
+abstract: >-
+  Two-stage cloud infrastructure planning, environmental handoff contracts,
+  reproducible experiments, saved solutions and publication figures.
+  Public electricity factors are combined with explicit constructed assumptions.
+keywords:
+  - cloud computing
+  - hierarchical planning
+  - sustainability
+  - mixed-integer optimization
+  - reproducibility
+preferred-citation:
+  type: unpublished
+  title: "Coordinating Sustainability Decisions in Cloud Operations: A Planning Matrix Approach"
+  authors:
+    - family-names: Wolf
+      given-names: Nathalia
+    - family-names: Brotcorne
+      given-names: Luce
+    - family-names: Lebourg
+      given-names: Grégory
+  year: 2026
+  notes: "Manuscript under revision; publication details will be added when available."

@@ -1,238 +1,95 @@
-# Sustainable Cloud Operations – Optimization Models
+# or-cloud-ops
 
-This repository contains optimization models for sustainable cloud operations, with each model addressing different aspects of cloud infrastructure planning and operations. Each model includes sustainability considerations tailored to its specific problem domain.
+Reproducible experiments for **Coordinating Sustainability Decisions in Cloud Operations: A Planning Matrix Approach**, by Nathalia Wolf, Luce Brotcorne and Grégory Lebourg.
 
-## Current Model: Facility Location (CFLP)
+The framework was developed during doctoral research within the Inria–OVHcloud FrugalCloud partnership. This repository contains the strategic–operational optimization model, experiment scripts, public carbon inputs, saved results and publication figures. The software is available under the [MIT license](LICENSE).
 
-This project currently implements a **Capacitated Facility Location Problem (CFLP)** for data-center siting with:
-- (a) a **baseline** model
-- (b) **usage-based CO₂/water caps**
-- (c) a **scalarized** objective to explore trade-offs
+The numerical study is a **constructed planning experiment**, not an operator case study. Eight Ember 2024 national electricity-generation lifecycle factors are loaded into the model. Demand, costs, capacity, water, seasonal variations, scenario probabilities and procurement discounts are explicit assumptions. The carbon metric is not certified Scope 2 accounting; portfolio water targets are not local permits.
 
-The intent is **illustrative**: a small toy instance to show how sustainability
-constraints and/or internalization of impacts changes the siting/allocation solution.
+## Install
 
-### Future Models
+Use Python 3.12 or newer. The pinned environment below was used for independent reproduction with Python 3.12.14 and Gurobi 12.0.3. The archived manuscript run used Python 3.13.12 and Gurobi 13.0.2.
 
-This is the first model in a planned collection. Future models will address other cloud operations problems, each with their own sustainability considerations and constraints.
-
----
-
-## 1) What you will build
-
-### Models
-1. **Baseline CFLP**
-   - Decision: open sites and assign demand to opened sites.
-   - Objective: cost + optional latency proxy
-   - Constraints: demand satisfaction, capacity, latency eligibility.
-
-2. **Capped-impact CFLP**
-   - Baseline +:
-   - **CO₂ cap**: \(\sum_{r}\sum_{i\in A_r} e_i^{CO2} y_{ir} \le \Gamma_{CO2}\)
-   - **Water cap**: \(\sum_{r}\sum_{i\in A_r} w_i y_{ir} \le \Gamma_W\)
-
-3. **Scalarized CFLP**
-   - Baseline objective +:
-   - \(\lambda_C \sum e_i^{CO2} y_{ir} + \lambda_W \sum w_i y_{ir}\)
-   - Solve for a grid of \((\lambda_C, \lambda_W)\) to generate a Pareto-style curve.
-
-### Outputs / KPIs
-For each solve, compute and report:
-- **Total cost**: \(\sum_i (F_i + O_i) x_i\)
-- **Latency proxy** (if used): \(\sum_{r}\sum_{i\in A_r} c_{ir} y_{ir}\)
-- **Total CO₂**: \(\sum_{r}\sum_{i\in A_r} e_i^{CO2} y_{ir}\)
-- **Total water**: \(\sum_{r}\sum_{i\in A_r} w_i y_{ir}\)
-- Opened sites set \(\{i : x_i = 1\}\) and allocation flows \(y_{ir}\)
-
-### Figures you will generate
-Recommended minimum set:
-1. **Map plot** (toy coordinates): sites + demand regions, highlight opened sites
-2. **Eligibility heatmap**: which arcs \((i,r)\) are allowed (\(i \in A_r\))
-3. **Trade-off curve** (from scalarized grid):
-   - Cost vs CO₂
-   - Cost vs water (or combined impact)
-4. **Before/after bar chart**: compare baseline vs capped vs one scalarized point
-
----
-
-## 2) Repository layout (suggested)
-
-```
-project/
-  src/
-    models.py           # gurobipy model builders + solve helpers (baseline/capped/scalarized)
-    instance.py         # instance dataclass + validation + optional toy generator
-    metrics.py          # KPI computation + helpers
-    plots.py            # plotting functions (matplotlib)
-  scripts/
-    run_baseline.py
-    run_capped.py
-    run_scalarized_scan.py
-    make_figures.py
-  data/
-    toy_instance.json   # optional: saved instance parameters for reproducibility
-  results/
-    runs.csv            # summary of runs (model variant, parameters, KPIs)
-    figures/
-      fig_map.png
-      fig_eligibility.png
-      fig_tradeoff_cost_co2.png
-      fig_tradeoff_cost_water.png
-      fig_kpi_bars.png
-  README.md
+```sh
+git clone https://github.com/NathWolf/or-cloud-ops.git
+cd or-cloud-ops
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-revision.txt
 ```
 
-You can start with a single file if preferred, but splitting into modules helps when the analysis grows.
+On Windows, activate with `.venv\Scripts\activate` instead. Run subsequent commands from the repository root.
 
----
+Gurobi is a proprietary dependency and has its own [license requirements](https://www.gurobi.com/academics/). Installing this repository does not grant a Gurobi license. Checking saved solutions does not run the optimizer or require an active solver license. Solving requires a license suitable for the model and use; Gurobi's pip distribution includes a restricted license for small models. Never commit a solver license file or cloud-license credentials.
 
-## 3) Environment & dependencies
+For publication figures, also install a working LaTeX distribution with Latin Modern fonts, `latex`, `dvipng` and Ghostscript. For example, on Ubuntu:
 
-### Required
-- Python 3.10+
-- `gurobipy` (requires a working Gurobi installation and license)
-- `numpy`, `pandas`, `matplotlib`
-
-Install non-Gurobi deps:
-
-```bash
-pip install numpy pandas matplotlib
+```sh
+sudo apt-get install texlive-latex-base texlive-latex-extra texlive-fonts-recommended cm-super dvipng ghostscript
 ```
 
-Gurobi installation/licensing varies by platform. Verify:
+## Check the published numerical evidence
 
-```bash
-python -c "import gurobipy as gp; print(gp.gurobi.version())"
+The exact saved results used in the manuscript are included under [`artifacts/revision_2026_09_21/`](artifacts/revision_2026_09_21/). They are separate from newly generated runs.
+
+```sh
+python scripts/check_release.py
+python scripts/verify_revision.py artifacts/revision_2026_09_21
 ```
 
----
+The first command checks archive integrity, required release files and the calibration input. The second recomputes feasibility, objectives and environmental impacts for 78 feasible saved solutions, checks the recorded infeasible statuses, and validates cap, handoff and accounting invariants. It does not re-solve the models or independently prove the saved infeasibility certificates.
 
-## 4) Data model (instance definition)
+To regenerate the three vector figures, tables and numerical LaTeX macros **without solving**:
 
-You need:
-- Sets: sites \(I\), regions \(R\)
-- Costs: \(F_i\), \(O_i\)
-- Capacities: \(C_i\)
-- Demand: \(d_r\)
-- Latency/distance: \(c_{ir}\)
-- Eligibility thresholds per region: \(L_r^{max}\), defining \(A_r = \{i: c_{ir} \le L_r^{max}\}\)
-- Sustainability factors:
-  - \(e_i^{CO2}\): CO₂ per unit served
-  - \(w_i\): water per unit served
-- Optional: \(\phi\) latency weight
+```sh
+MPLCONFIGDIR=results/.mplcache python scripts/export_revision.py \
+  --results-dir artifacts/revision_2026_09_21 \
+  --output-dir results/reproduced_figures
+```
 
-### Units (pick ONE consistent interpretation)
-To keep the toy instance coherent, choose:
-- Demand \(d_r\): “service units” (abstract)
-- Capacity \(C_i\): same service units
-- CO₂ factor \(e_i^{CO2}\): kgCO₂e per service unit
-- Water factor \(w_i\): liters per service unit
-- Latency \(c_{ir}\): milliseconds or normalized distance (only a proxy unless you calibrate)
+The reference figures are in [`latex/fig/`](latex/fig/), with filenames starting `fig_revision_`. Older tracked figures correspond to the earlier one-period illustration.
 
-Document units in the numerical section to avoid ambiguity.
+## Run the experiments
 
----
+```sh
+python scripts/run_all.py --quick
+python scripts/run_all.py --figure-dir results/reproduced_figures
+```
 
-## 5) Running the three model variants
+The quick command runs a smaller smoke instance under `results/revision_smoke/`; it does not export manuscript figures or replace the reference archive. The full command writes `results/revision_2026_09_21/` and runs:
 
-### A) Baseline
-1. Build baseline model
-2. Solve
-3. Extract KPIs
+- Cost-only, expected-target and internal-price regimes, including a 49-pair price grid.
+- Carbon and water sweeps, common-cap accounting comparisons and interconnection sensitivity.
+- Frozen-infrastructure acceptance and infeasibility diagnosis.
+- Scenario-wise environmental constraints, demand stresses and ten demand-perturbation seeds.
+- Independent residual checks, tables and consistent vector figures.
 
-Expected result: cheapest siting pattern under eligibility/capacity.
+Use `--output-dir PATH` and `--figure-dir PATH` to choose output locations. Keep the reference archive unchanged. Exact solver runtimes and alternative optimal allocations can vary across systems; the scientific comparisons are based on objective values, impacts and feasibility. See [the experiment guide](docs/EXPERIMENTS.md) for scripts, outputs and expected results.
 
-### B) Capped-impact
-1. Start from the baseline model builder
-2. Add CO₂ and water caps
-3. Solve and compare:
-   - Does it open “cleaner” sites?
-   - Does it shift allocations to lower-impact sites?
+## Main findings and interpretation
 
-**Choosing caps** (practical approach for toy):
-- Solve baseline, compute \(CO2_0\), \(W_0\)
-- Set \(\Gamma_{CO2} = \alpha\,CO2_0\) and \(\Gamma_W = \beta\,W_0\)
-- Try \(\alpha,\beta \in \{0.95, 0.9, 0.85, 0.8\}\)
+Anticipating expected environmental targets increases normalized cost by 2.729% in the constructed instance. Freezing the cost-only infrastructure makes those targets infeasible through reallocation alone. Expected compliance still permits approximately 25% exceedance in the high scenario; scenario-wise targets increase cost by 26.428%. The sampled internal-price pair `(0, 5)` meets both expected targets, so a general failure of internal pricing is not claimed. Interval abatement costs are finite differences, while LP duals are conditional on fixed sites, links **and capacity**.
 
-### C) Scalarized scan (trade-offs)
-1. Keep feasibility constraints identical
-2. Vary \((\lambda_C,\lambda_W)\) over a grid
-3. For each solve, store KPIs
-4. Plot cost vs impacts
+The main regime, carbon sweep, handoff and seed results were reproduced locally and on a Linux server to an absolute difference below 1e-10. This is a consistency check, not a solver-performance comparison. The study tests environmental decision interfaces; it does not measure organizational effectiveness or comprehensive sustainability.
 
-Suggested grids:
-- If costs are ~hundreds and impacts are ~tens, start with:
-  - \(\lambda_C \in \{0, 1, 5, 10, 25, 50\}\)
-  - \(\lambda_W \in \{0, 1, 5, 10, 25, 50\}\)
+## Repository contents
 
-Adjust so that the added terms actually influence decisions (you should observe changing solutions).
+| Path | Purpose |
+| --- | --- |
+| `src/models/hierarchical.py` | Two-stage strategic–operational MILP and input construction |
+| `src/contract_audit.py` | Frozen contracts, diagnostic excess and independent residuals |
+| `src/analysis_hierarchical.py` | Numerical summaries and experiment comparisons |
+| `scripts/run_all.py` | Complete reproduction entry point |
+| `scripts/verify_revision.py` | Verification of saved solutions without solving |
+| `scripts/export_revision.py` | Publication figures, tables and numerical macros |
+| `data/public/` | Eight frozen public observations, attribution and provenance |
+| `artifacts/revision_2026_09_21/` | Reference instance, solutions, tables and manifests |
+| `.github/workflows/reproducibility.yml` | Archive verification, smoke solve and figure-export checks |
 
----
+Earlier one-period CFLP scripts are retained for research history. They are not used to produce the current manuscript results. Private editorial correspondence and working manuscript files are excluded from this code release.
 
-## 6) Testing and validation checklist
+## Data, licensing and citation
 
-### Feasibility checks
-- Every region must have at least one eligible site: \(A_r \neq \emptyset\)
-- Total capacity of potentially open sites should cover total demand
-- If caps are too tight, the capped model can become infeasible:
-  - Detect infeasibility and relax caps or report it (use IIS if needed)
+The original code and accompanying software documentation are MIT-licensed. The included Ember data retain **CC BY 4.0**, with attribution and transformations described in [`data/public/README.md`](data/public/README.md). Gurobi and other installed dependencies retain their own licenses. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-### Sanity checks
-- With \(\phi=0\), objective should ignore latency proxy
-- If \(\lambda_C=\lambda_W=0\), scalarized model should match baseline
-- Tightening caps should not decrease impacts (monotonicity check):
-  - It may increase cost, and may change opened set and allocations
-
-### Reproducibility
-- Fix random seed for toy generator
-- Save instance to JSON and reuse across runs
-
----
-
-## 7) Recommended reporting (for the paper)
-
-In the numerical analysis section:
-1. Describe toy instance sizes: \(|I|\), \(|R|\)
-2. Explain how costs, capacities, and impacts were generated (or provide a table)
-3. Show baseline solution KPIs
-4. Show capped solution KPIs (and whether caps bind)
-5. Show scalarized trade-off curves
-6. Provide brief interpretation:
-   - “Cost increases by X% to reduce CO₂ by Y%”
-   - “Allocation shifts from sites {…} to {…}”
-   - “Latency eligibility keeps SLA feasibility”
-
-Avoid claiming real-world calibration unless you actually calibrate.
-
----
-
-## 8) Common pitfalls
-
-- **Unit mismatch**: costs, demands, and impact factors not aligned
-- **Eligibility too strict**: some regions have no feasible sites
-- **Caps too tight**: infeasible capped model
-- **Scalarization weights too small/large**: no solution change (too small) or weird dominance (too large)
-- **Interpreting latency**: in toy examples, treat it as a proxy, not a real SLA metric unless you model it carefully
-
----
-
-## 9) Future models and extensions
-
-### Planned Models
-This repository will expand to include additional cloud operations models, each with sustainability considerations:
-- **Workload scheduling and allocation** models
-- **Resource provisioning** models
-- **Multi-cloud optimization** models
-- Other cloud operations problems with tailored sustainability constraints
-
-### Location Model Extensions (optional)
-
-If you later want a richer demonstration of the location model:
-- Add a **resilience constraint** (e.g., each region must be served by at least 2 sites)
-- Add **multi-period opening** (strategic realism)
-- Add **time-varying carbon intensity** (hourly grid mix)
-- Add **portfolio renewable share** constraints
-
-Keep the toy section minimal unless the paper’s contribution depends on these.
-
----
+Use [CITATION.cff](CITATION.cff) to cite the software and associated manuscript. The manuscript is under revision; no publication DOI or acceptance is implied. Scientific citation is requested, not an additional condition on the MIT license.

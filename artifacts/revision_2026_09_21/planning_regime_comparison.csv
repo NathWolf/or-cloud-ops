@@ -1,0 +1,5 @@
+regime,economic_cost,expected_co2,expected_water,co2_target_met,water_target_met,num_opened_sites,active_links,downstream_implication
+Cost-only planning,4567.285221652146,249.5564001720916,529.7802683965702,not encoded,not encoded,6,13,Lowest-cost envelope; sustainability targets not encoded upstream
+Reporting-only sustainability,4567.285221652146,249.5564001720916,529.7802683965702,no,no,6,13,Targets checked ex post; replanning required if targets are binding
+Handoff-contract hard envelope,4691.937213908908,210.26867329632623,472.8795568349599,yes,yes,6,14,Targets encoded upstream; downstream allocation inherits feasible envelope
+"Internal-price planning (lambda_C=0, lambda_W=5)",4698.914166911214,211.5728740425372,470.8754106598799,yes,yes,6,14,Price response screened ex post; compliance is not guaranteed

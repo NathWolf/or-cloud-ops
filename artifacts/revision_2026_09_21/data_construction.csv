@@ -1,0 +1,10 @@
+parameter_group,public_proxy_basis,proxy_or_transformation,role_in_model
+Candidate sites and demand regions,European city planning-zone proxy,Coded as anonymized site and demand-region identifiers,"Defines site set I, region set R, and geography for eligibility"
+Demand by region and workload,Scaled planning proxy,"Fixed-seed demand by region, workload, period, and scenario",Right-hand side of downstream allocation constraints
+Capacity envelope,Scaled engineering proxy,Normalized site capacity and capacity-cost values,First-stage committed capacity and downstream capacity limits
+Electricity/carbon factors,Ember 2024 national annual factors,"Divide gCO2/kWh by 1000; assume 1 kWh per service unit; synthetic seasonal/scenario multipliers. Lifecycle generation boundary, not Scope 2.",Expected CO2 accounting and carbon-cap constraints
+Water-stress and seasonal water limits,Constructed direct-water assumptions,Assumed litres per normalized unit and seasonal multipliers; no measured water values or basin permits are claimed,Expected direct-water accounting and seasonal water limits
+Distance/latency eligibility,Great-circle distance proxy,Inference links <= 900 km; training links <= 2200 km,Candidate eligibility envelope for link-activation variables
+Interconnection activation cost,Scaled planning proxy,Relative link activation cost based on distance and workload class,First-stage cost for activating eligible links
+Accounting convention,Scaled accounting proxy,Unadjusted generation factors and hypothetical procurement discounts; not certified Scope 2 accounting,Defines which carbon factors are constrained or priced
+Internal prices,Governance parameter grid,Experimental carbon and water price grid,"Scalarized governance comparison, not compliance guarantee"
