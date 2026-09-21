@@ -64,13 +64,13 @@ The quick command runs a smaller smoke instance under `results/revision_smoke/`;
 - Scenario-wise environmental constraints, demand stresses and ten demand-perturbation seeds.
 - Independent residual checks, tables and consistent vector figures.
 
-Use `--output-dir PATH` and `--figure-dir PATH` to choose output locations. Keep the reference archive unchanged. Exact solver runtimes and alternative optimal allocations can vary across systems; the scientific comparisons are based on objective values, impacts and feasibility. See [the experiment guide](docs/EXPERIMENTS.md) for scripts, outputs and expected results.
+Use `--output-dir PATH` and `--figure-dir PATH` to choose output locations. Keep the reference archive unchanged. Exact solver runtimes and alternative optimal allocations can vary across systems; comparisons use objective values, impacts and feasibility. See [the experiment guide](docs/EXPERIMENTS.md) for scripts, outputs and expected results.
 
 ## Main findings and interpretation
 
 Anticipating expected environmental targets increases normalized cost by 2.729% in the constructed instance. Freezing the cost-only infrastructure makes those targets infeasible through reallocation alone. Expected compliance still permits approximately 25% exceedance in the high scenario; scenario-wise targets increase cost by 26.428%. The sampled internal-price pair `(0, 5)` meets both expected targets, so a general failure of internal pricing is not claimed. Interval abatement costs are finite differences, while LP duals are conditional on fixed sites, links **and capacity**.
 
-The main regime, carbon sweep, handoff and seed results were reproduced locally and on a Linux server to an absolute difference below 1e-10. This is a consistency check, not a solver-performance comparison. The study tests environmental decision interfaces; it does not measure organizational effectiveness or comprehensive sustainability.
+The main regime, carbon sweep, handoff and seed results were reproduced locally and on a Linux server to an absolute difference below 1e-10. This is a consistency check, not a solver-performance comparison. The study tests whether operations can meet environmental targets after infrastructure decisions have been fixed. It does not measure organizational effectiveness or comprehensive sustainability.
 
 ## Repository contents
 
