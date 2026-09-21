@@ -90,3 +90,51 @@ The accounting sensitivity multiplies each original site carbon factor by the fa
 These exact multipliers are hard-coded illustrative assumptions in `make_public_calibrated_hierarchical_instance`; they are not estimated from Ember data, procurement contracts or OVHcloud records. No empirical interpretation attaches to their ordering or differences. They must not be interpreted as measured renewable-electricity shares or verified market-based Scope 2 factors.
 
 The comparison asks whether changing the accounting coefficients changes the plan's apparent compliance under the same numerical carbon cap. It holds demand and physical constraints fixed, reoptimizes under the chosen coefficients, and then evaluates each solution with the original seasonal coefficients. The reduced-factor cases recover the cost-only plan. This illustrates dependence on accounting definitions; it does not demonstrate procurement effectiveness or measured emissions reductions. Seasonal versus annual averaging is a separate comparison using the original coefficients.
+
+## Input values and scenario construction
+
+The manuscript keeps the setup brief; the complete instance is archived in `artifacts/revision_2026_09_21/instance.json`. The generator is `make_public_calibrated_hierarchical_instance` in `src/models/hierarchical.py`. It stores assumed costs, demand, capacity, water coefficients and eligible links alongside the public carbon inputs.
+
+The eight 2024 Ember observations, retrieved on 21 September 2026, are:
+
+| Country | Representative city | Electricity factor (gCO2/kWh) |
+| --- | --- | ---: |
+| France | Paris | 40.49 |
+| Germany | Frankfurt | 337.12 |
+| Netherlands | Amsterdam | 250.72 |
+| Ireland | Dublin | 270.91 |
+| Sweden | Stockholm | 34.91 |
+| Poland | Warsaw | 608.36 |
+| Spain | Madrid | 146.22 |
+| Finland | Helsinki | 66.75 |
+
+These are electricity-generation lifecycle factors, not site measurements or consumption-adjusted grid factors. Divide by 1000 to obtain kg per assumed 1 kWh service unit. The same assumed facility electricity per service unit applies to every site and workload, including overheads; it is not a measured compute efficiency.
+
+| Representative period | Raw carbon multiplier | Demand multiplier | Water multiplier |
+| --- | ---: | ---: | ---: |
+| Winter | 1.10 | 1.00 | 0.84 |
+| Spring | 0.91 | 1.04 | 0.96 |
+| Summer | 1.16 | 1.12 | 1.34 |
+| Autumn | 0.96 | 0.98 | 1.00 |
+
+Divide the raw carbon multipliers by their equal-period mean (1.0325). This preserves the public annual factor in the base scenario. Periods have equal duration; costs and impacts are summed over these four blocks without extrapolating annual operator totals.
+
+| Scenario | Assumed probability | Demand multiplier | Carbon multiplier | Water multiplier |
+| --- | ---: | ---: | ---: | ---: |
+| Low | 0.25 | 0.90 | 0.965 | 1.00 |
+| Base | 0.50 | 1.00 | 1.000 | 1.00 |
+| High | 0.25 | 1.16 | 1.056 | 1.10 |
+
+The scenario carbon multiplier is `1 + 0.35 * (demand_multiplier - 1)`. Multiply each site's base coefficient by both its period and scenario multipliers. Demand receives a uniform multiplicative perturbation between 0.985 and 1.015 for each region, period and scenario; inference and training share that region-period-scenario draw. Seed 11 defines the reference instance; seeds 11–20 define the ten commitment tests. All seasonal/scenario multipliers and probabilities are assumed, not fitted observations.
+
+Inference links are admissible up to 900 km and training links up to 2200 km in great-circle distance. Activation is optimized within that fixed admissible set. No routing, congestion, bandwidth or endogenous network topology is represented. Capacity is service volume per period. Allocation has perfect information about the scenario, and training cannot move between periods.
+
+Direct-water inputs are assumed litres per normalized unit; water-stress indices are not converted into water use or permits. Water limits apply to the portfolio in each season, not to individual basins. Prices and costs are arbitrary planning units. These inputs cannot support estimates of operator expenditure, real-world water savings or legal compliance.
+
+## Supporting comparisons and verification
+
+The main text introduces each comparison alongside its results. The archive also retains water-only sweeps, interconnection-cost multipliers of 0.5, 1, 2 and 4, and a diagnostic that minimizes the sum of normalized carbon and seasonal-water excesses under the frozen cost-only plan. Its reference value, 0.621, is a dimensionless sum across constraints, not a percentage of total emissions.
+
+The price grid uses all 49 pairs from `{0, 2, 5, 10, 20, 40, 80}` in planning-cost units per respective impact unit. The representative pair minimizes absolute relative carbon deviation plus mean absolute relative seasonal-water deviation from the targets; compliance is checked separately. Finite sampling does not establish equivalence over the continuous price space.
+
+Primary solves request zero relative MIP gap and one solver thread. Independent checks reconstruct demand satisfaction, site/link feasibility, capacity use, costs and impacts from saved decisions. Source hashes, software versions, solver bounds and times accompany the reference archives. These small instances do not test computational scalability.
