@@ -15,12 +15,11 @@ plt.rcParams.update({'text.usetex':True,'text.latex.preamble':r'\usepackage[T1]{
  'pdf.fonttype':42,'savefig.dpi':300})
 BLUE='#0072B2';ORANGE='#D55E00';GREEN='#009E73'
 
-def table(out,name,caption,label,cols,rows,spec,note=''):
- text=['\\begin{table}[tbp]','\\centering\\small',f'\\caption{{{caption}}}\\label{{{label}}}',
+def table(out,name,caption,label,cols,rows,spec):
+ text=['\\begin{table}[H]','\\centering\\small',f'\\caption{{{caption}}}\\label{{{label}}}',
        f'\\begin{{tabular}}{{@{{}}{spec}@{{}}}}','\\toprule',' & '.join(cols)+r' \\',r'\midrule']
  text+=[' & '.join(map(str,r))+r' \\' for r in rows]
  text += [r'\bottomrule',r'\end{tabular}']
- if note:text += [r'\par\smallskip\begin{minipage}{\linewidth}\footnotesize '+note+r'\end{minipage}']
  text += [r'\end{table}']
  (out/(name+'.tex')).write_text('\n'.join(text)+'\n')
 
@@ -38,9 +37,8 @@ def main():
  for label,r,ct,wt in [('Cost-only / reporting',b,'No','No'),('Expected targets',h,'Yes','Yes'),('Prices $(0,5)$',price,'Yes','Yes')]:
   rows.append([label,f'{r.economic_cost:,.1f}',f'{r.expected_co2:.1f}',f'{r.expected_water:.1f}',ct,wt])
  rows += [['Frozen cost-only','Infeasible','--','--','--','--'],['Scenario-wise targets',f'{robust.cost:,.1f}',f'{robust.expected_carbon_ratio*.85*b.expected_co2:.1f}',f'{sum(json.loads((root/"solutions/audit_6.json").read_text())["period_water"].values()):.1f}','Yes','Yes']]
- table(out,'table_revision_regimes','Planning and downstream acceptance under common expected targets.','tab:regimes',
- ['Regime','Cost','Carbon','Water','C target','W target'],rows,'lrrrrr',
- 'Cost is in normalized planning units; carbon is in kg CO$_2$-equivalent electricity-impact proxy and water in assumed litres. C/W tests use expected carbon and each expected seasonal-water target. The scenario-wise row also satisfies every modeled scenario. Infeasible means no compliant allocation exists for fixed sites, capacity and links; it is not a solver timeout.')
+ table(out,'table_revision_regimes','Costs, impacts and target compliance.','tab:regimes',
+ ['Regime','Cost','Carbon','Water','C target','W target'],rows,'lrrrrr')
  review=pd.read_csv(Path(a.commitment_dir)/'commitment_review.csv')
  reference=review[review.seed==11].set_index('case')
  labels_review=[('Allocation only','allocation_only',r'$x,K,g$'),
@@ -54,18 +52,14 @@ def main():
   rows.append([label,fixed,'Feasible' if r.status==2 else 'Infeasible',
                f'{r.cost_increase_pct:.3f}'+r'\%' if r.status==2 else '--',
                f'{int((samples.status==2).sum())}/{len(samples)}'])
- table(out,'table_revision_commitments','Which decisions must be reopened before approval?','tab:commitment-review',
-       ['Decisions reopened','Fixed','Reference case','Cost increase','Feasible seeds'],rows,'llrrr',
-       'Each test starts from the cost-only plan and retains the same expected carbon and seasonal-water targets. '+
-       'Cost increases use the original planning objective and exclude sunk, conversion and transition costs. '+
-       'The ten seeds perturb demand within one constructed network; they are not independent field cases.')
+ table(out,'table_revision_commitments','Feasibility after revising infrastructure decisions.','tab:commitment-review',
+       ['Decisions reopened','Fixed','Reference case','Cost increase','Feasible seeds'],rows,'llrrr')
  labels={'location_time':'Seasonal, unadjusted','location_annual':'Annual, unadjusted','market_time':'Seasonal, adjusted','market_annual':'Annual, adjusted'}
  rows=[]
  for _,r in acc[acc.accounting_experiment=='cap_85'].iterrows():
   rows.append([labels[r.accounting_mode],f'{r.economic_cost:,.1f}',f'{r.expected_co2:.2f}',f'{r.common_boundary_carbon:.2f}',str(int(r.active_links))])
  table(out,'table_revision_accounting','Accounting sensitivity at the same numerical carbon cap (212.12).','tab:accounting',
- ['Factor convention','Cost','Own boundary','Common boundary','Links'],rows,'lrrrr',
- 'Both impact columns use kg CO$_2$-equivalent electricity-impact proxy. Adjusted factors use assumed procurement discounts and are not certified market-based Scope~2 factors. The common boundary always uses unadjusted seasonal factors. The selected site set is unchanged.')
+ ['Factor convention','Cost','Own boundary','Common boundary','Links'],rows,'lrrrr')
  rows=[]
  for _,r in cap.sort_values('alpha',ascending=False).iterrows():
   d=duals[(duals.constraint=='carbon_cap')&(duals.alpha==r.alpha)].iloc[0]
@@ -73,8 +67,7 @@ def main():
   rows.append([f'{100*r.alpha:.0f}\\%',f'{r.economic_cost:.1f}',f'{r.expected_co2:.2f}',
     '--' if iac.empty else f'{iac.iloc[0].interval_abatement_cost:.3f}',f'{max(0,d.shadow_price):.3f}'])
  table(out,'table_revision_duals','Interval abatement costs and conditional recourse shadow prices.','tab:duals',
- ['Cap','Cost','Carbon','Interval ratio','LP tightening value'],rows,'rrrrr',
- 'Each interval ratio starts at the preceding row. Both final columns are planning-cost units per kg of electricity-impact proxy; the LP fixes sites, links and continuous capacity. Values do not describe global mixed-integer derivatives.')
+ ['Cap','Cost','Carbon','Interval ratio','LP tightening value'],rows,'rrrrr')
  def save(fig,name):
   fig.savefig(out/(name+'.pdf'),bbox_inches='tight',pad_inches=.04)
   fig.savefig(out/(name+'.png'),bbox_inches='tight',pad_inches=.04)
@@ -175,23 +168,23 @@ def export_case_study_figures(root, out, baseline, cap, save):
  c['carbon_reduction_pct']=100*(1-c.expected_co2/baseline.expected_co2)
  c['cost_increase_pct']=100*(c.economic_cost/baseline.economic_cost-1)
  c['water_change_pct']=100*(c.expected_water/baseline.expected_water-1)
- c['regime']='Carbon-only'
+ c['regime']='Carbon only'
  joint_cost=sum(joint[k] for k in ['total_first_stage_cost','expected_operating_cost','expected_latency_proxy'])
  joint_row=dict(alpha=.85,carbon_reduction_pct=100*(1-joint['expected_co2']/baseline.expected_co2),
                 cost_increase_pct=100*(joint_cost/baseline.economic_cost-1),
-                water_change_pct=100*(joint['expected_water']/baseline.expected_water-1),regime='Joint expected targets')
+                water_change_pct=100*(joint['expected_water']/baseline.expected_water-1),regime='Carbon + water')
  columns=['regime','alpha','carbon_reduction_pct','cost_increase_pct','water_change_pct']
  pd.concat([c,pd.DataFrame([joint_row])],ignore_index=True)[columns].to_csv(out/'figure_tradeoffs.csv',index=False)
  fig,axes=plt.subplots(1,2,figsize=(6.3,2.85),layout='constrained')
  for ax,col,title,ylabel in zip(axes,['cost_increase_pct','water_change_pct'],
      ['(a) Economic cost','(b) Expected water use'],
      [r'Cost increase (\% of baseline)',r'Water change (\% of baseline)']):
-  ax.plot(c.carbon_reduction_pct,c[col],color=BLUE,marker='o',ms=4,label='Carbon-only caps')
+  ax.plot(c.carbon_reduction_pct,c[col],color=BLUE,marker='o',ms=4,label='Carbon only')
   ax.scatter(joint_row['carbon_reduction_pct'],joint_row[col],color=ORANGE,marker='s',s=32,
-             zorder=4,label='Joint expected targets')
+             zorder=4,label='Carbon + water')
   ax.set_ylabel(ylabel);ax.set_title(title,loc='left');ax.grid();ax.set_axisbelow(True)
   ax.set_xlabel(r'Achieved carbon reduction (\%)');ax.set_xlim(-1,27);ax.set_xticks([0,5,10,15,20,25])
- axes[0].set_ylim(-.15,3.65);axes[0].legend(frameon=False,loc='upper left',fontsize=8.5)
+ axes[0].set_ylim(-.15,3.65);axes[0].legend(frameon=False,loc='upper left')
  axes[1].axhline(0,color='0.4',ls='--',lw=.8);axes[1].set_ylim(-12.5,3)
  at85=c.loc[np.isclose(c.alpha,.85)].iloc[0]
  axes[1].annotate(r'85\% carbon cap',xy=(at85.carbon_reduction_pct,at85.water_change_pct),
