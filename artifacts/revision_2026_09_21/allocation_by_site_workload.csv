@@ -1,0 +1,21 @@
+label,site,workload,expected_flow
+Cost-only planning,C1,inf,76.61556514371946
+Cost-only planning,C1,train,278.50267028236266
+Cost-only planning,C2,inf,81.7918045255018
+Cost-only planning,C2,train,270.5443079786482
+Cost-only planning,C3,inf,71.31538069617848
+Cost-only planning,C3,train,258.65144886506874
+Cost-only planning,C4,inf,56.572098760755146
+Cost-only planning,S1,inf,67.38127603246693
+Cost-only planning,S3,inf,90.36553987280482
+Cost-only planning,S3,train,0.3673218194774224
+Handoff-contract hard envelope,C1,inf,76.61556514371946
+Handoff-contract hard envelope,C1,train,353.9368223416078
+Handoff-contract hard envelope,C2,inf,81.7918045255018
+Handoff-contract hard envelope,C2,train,310.0948070638703
+Handoff-contract hard envelope,C3,inf,71.31538069617848
+Handoff-contract hard envelope,C3,train,18.897464051211724
+Handoff-contract hard envelope,C4,inf,56.572098760755146
+Handoff-contract hard envelope,S1,inf,67.38127603246693
+Handoff-contract hard envelope,S1,train,125.13665548886718
+Handoff-contract hard envelope,S3,inf,90.36553987280482

@@ -1,0 +1,7 @@
+{
+  "local_gurobi": "12.0.3",
+  "remote_gurobi": "13.0.2",
+  "cases": 5,
+  "maximum_absolute_difference": 1.2073675392798577e-15,
+  "comparison": "joint objective and each normalized excess component"
+}

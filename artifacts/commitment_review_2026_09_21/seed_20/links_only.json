@@ -1,0 +1,74 @@
+{
+  "status": 3,
+  "obj": null,
+  "x": {
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "C4": 0.0,
+    "S1": 0.0,
+    "S2": 0.0,
+    "S3": 0.0,
+    "S4": 0.0
+  },
+  "capacity": {
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "C4": 0.0,
+    "S1": 0.0,
+    "S2": 0.0,
+    "S3": 0.0,
+    "S4": 0.0
+  },
+  "g": {},
+  "y": {},
+  "total_first_stage_cost": null,
+  "expected_operating_cost": null,
+  "expected_latency_proxy": null,
+  "expected_co2": null,
+  "expected_water": null,
+  "period_co2": {
+    "winter": 0.0,
+    "spring": 0.0,
+    "summer": 0.0,
+    "autumn": 0.0
+  },
+  "period_water": {
+    "winter": 0.0,
+    "spring": 0.0,
+    "summer": 0.0,
+    "autumn": 0.0
+  },
+  "scenario_co2": {
+    "low": 0.0,
+    "base": 0.0,
+    "high": 0.0
+  },
+  "scenario_water": {
+    "low": 0.0,
+    "base": 0.0,
+    "high": 0.0
+  },
+  "params": {
+    "gamma_co2": 212.03728315171958,
+    "gamma_w_by_period": {
+      "winter": 92.66372070309322,
+      "spring": 110.12387093409511,
+      "summer": 166.0649036362311,
+      "autumn": 108.10429723917628
+    },
+    "fixed_commitments": [
+      "x",
+      "capacity"
+    ],
+    "pre_approval_revision": true,
+    "accounting_mode": "location_time",
+    "runtime_s": 0.005991220474243164,
+    "num_variables": 835,
+    "num_constraints": 1076,
+    "solution_count": 0,
+    "objective_bound": Infinity,
+    "mip_gap": null
+  }
+}

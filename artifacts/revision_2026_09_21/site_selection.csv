@@ -1,0 +1,49 @@
+label,site,open,committed_capacity
+Baseline,C1,1,108.0
+Baseline,C2,1,108.62815009434213
+Baseline,C3,1,102.3611294940511
+Baseline,C4,1,17.600739564720172
+Baseline,S1,1,21.103505038174575
+Baseline,S2,0,0.0
+Baseline,S3,1,28.992997891729257
+Baseline,S4,0,0.0
+Carbon cap 85%,C1,1,108.0
+Carbon cap 85%,C2,1,69.4359264520178
+Carbon cap 85%,C3,1,104.15178156134492
+Carbon cap 85%,C4,1,55.00231113975084
+Carbon cap 85%,S1,1,21.103505038174653
+Carbon cap 85%,S2,0,0.0
+Carbon cap 85%,S3,1,28.992997891729388
+Carbon cap 85%,S4,0,0.0
+Handoff-contract hard envelope,C1,1,108.0
+Handoff-contract hard envelope,C2,1,114.01701912370203
+Handoff-contract hard envelope,C3,1,59.24932410027674
+Handoff-contract hard envelope,C4,1,17.600739564720172
+Handoff-contract hard envelope,S1,1,60.295728680499025
+Handoff-contract hard envelope,S2,0,0.0
+Handoff-contract hard envelope,S3,1,27.523710613819567
+Handoff-contract hard envelope,S4,0,0.0
+Water cap 90%,C1,1,108.0
+Water cap 90%,C2,1,114.017019123702
+Water cap 90%,C3,1,59.2493241002768
+Water cap 90%,C4,1,17.600739564720172
+Water cap 90%,S1,1,60.295728680498925
+Water cap 90%,S2,0,0.0
+Water cap 90%,S3,1,27.52371061381953
+Water cap 90%,S4,0,0.0
+Internal price C=20 W=10,C1,1,108.0
+Internal price C=20 W=10,C2,1,24.99693352272637
+Internal price C=20 W=10,C3,1,0.0
+Internal price C=20 W=10,C4,1,17.60073956472024
+Internal price C=20 W=10,S1,1,132.0
+Internal price C=20 W=10,S2,0,0.0
+Internal price C=20 W=10,S3,1,27.52371061381953
+Internal price C=20 W=10,S4,1,76.56513838175144
+"Internal-price planning (lambda_C=0, lambda_W=5)",C1,1,108.0
+"Internal-price planning (lambda_C=0, lambda_W=5)",C2,1,116.0
+"Internal-price planning (lambda_C=0, lambda_W=5)",C3,1,22.08624969246688
+"Internal-price planning (lambda_C=0, lambda_W=5)",C4,1,52.78083309623172
+"Internal-price planning (lambda_C=0, lambda_W=5)",S1,1,60.29572868049881
+"Internal-price planning (lambda_C=0, lambda_W=5)",S2,0,0.0
+"Internal-price planning (lambda_C=0, lambda_W=5)",S3,1,27.52371061381953
+"Internal-price planning (lambda_C=0, lambda_W=5)",S4,0,0.0

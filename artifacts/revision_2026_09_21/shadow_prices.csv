@@ -1,0 +1,28 @@
+label,experiment,alpha,constraint,period,status,shadow_price,slack,interpretation,from_alpha,to_alpha,delta_cost,delta_co2,interval_abatement_cost
+Carbon cap 100%,carbon_cap_sweep,1.0,carbon_cap,,2.0,-0.0,-4.424238753131249e-14,local conditional LP recourse shadow price,,,,,
+Carbon cap 95%,carbon_cap_sweep,0.95,carbon_cap,,2.0,-0.0,1.9568970893220943,local conditional LP recourse shadow price,,,,,
+Carbon cap 90%,carbon_cap_sweep,0.9,carbon_cap,,2.0,1.79643323183993,0.0,local conditional LP recourse shadow price,,,,,
+Carbon cap 85%,carbon_cap_sweep,0.85,carbon_cap,,2.0,1.4858766168352333,0.0,local conditional LP recourse shadow price,,,,,
+Carbon cap 80%,carbon_cap_sweep,0.8,carbon_cap,,2.0,0.6804208552913217,0.0,local conditional LP recourse shadow price,,,,,
+Carbon cap 75%,carbon_cap_sweep,0.75,carbon_cap,,2.0,1.333794706163256,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 100%,water_cap_sweep,1.0,water_cap,winter,2.0,-0.0,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 100%,water_cap_sweep,1.0,water_cap,spring,2.0,-0.0,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 100%,water_cap_sweep,1.0,water_cap,summer,2.0,-0.0,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 100%,water_cap_sweep,1.0,water_cap,autumn,2.0,-0.0,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 95%,water_cap_sweep,0.95,water_cap,winter,2.0,-0.0,1.343384503863509,local conditional LP recourse shadow price,,,,,
+Water cap 95%,water_cap_sweep,0.95,water_cap,spring,2.0,-0.0,1.086170233650081,local conditional LP recourse shadow price,,,,,
+Water cap 95%,water_cap_sweep,0.95,water_cap,summer,2.0,-0.0,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 95%,water_cap_sweep,0.95,water_cap,autumn,2.0,-0.0,1.9692564986035803,local conditional LP recourse shadow price,,,,,
+Water cap 90%,water_cap_sweep,0.9,water_cap,winter,2.0,-0.0,1.2195308659323465,local conditional LP recourse shadow price,,,,,
+Water cap 90%,water_cap_sweep,0.9,water_cap,spring,2.0,-0.0,0.882693528527134,local conditional LP recourse shadow price,,,,,
+Water cap 90%,water_cap_sweep,0.9,water_cap,summer,2.0,-0.0,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 90%,water_cap_sweep,0.9,water_cap,autumn,2.0,-0.0,1.820460327493902,local conditional LP recourse shadow price,,,,,
+Water cap 85%,water_cap_sweep,0.85,water_cap,winter,2.0,1.373626373626373,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 85%,water_cap_sweep,0.85,water_cap,spring,2.0,1.2019230769230764,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 85%,water_cap_sweep,0.85,water_cap,summer,2.0,0.8610792192881742,0.0,local conditional LP recourse shadow price,,,,,
+Water cap 85%,water_cap_sweep,0.85,water_cap,autumn,2.0,1.1538461538461533,0.0,local conditional LP recourse shadow price,,,,,
+,carbon_cap_sweep,,,,,,,,1.0,0.95,8.317229184101052,14.434717097926779,0.5761962030621046
+,carbon_cap_sweep,,,,,,,,0.95,0.9,10.770247302019925,10.520922919282413,1.023697957360809
+,carbon_cap_sweep,,,,,,,,0.9,0.85,19.142029135326084,12.477820008604624,1.5340844091456571
+,carbon_cap_sweep,,,,,,,,0.85,0.8,41.85581821317646,12.477820008604482,3.3544175332160133
+,carbon_cap_sweep,,,,,,,,0.8,0.75,41.89160478571284,12.477820008604624,3.357285548022384

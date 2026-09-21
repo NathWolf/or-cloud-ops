@@ -1,0 +1,18 @@
+[
+  {
+    "file": "planning_regime_comparison.csv",
+    "max_absolute_difference": 3.637978807091713e-12
+  },
+  {
+    "file": "cap_sweep.csv",
+    "max_absolute_difference": 6.366462912410498e-12
+  },
+  {
+    "file": "handoff_audit.csv",
+    "max_absolute_difference": 2.7284841053187847e-12
+  },
+  {
+    "file": "seed_sensitivity.csv",
+    "max_absolute_difference": 3.694822225952521e-13
+  }
+]

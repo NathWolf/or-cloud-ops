@@ -1,0 +1,9 @@
+component,value,detail
+Sites,8.0,"C1,C2,C3,C4,S1,S2,S3,S4"
+Demand regions,6.0,"R1,R2,R3,R4,R5,R6"
+Periods,4.0,"winter,spring,summer,autumn"
+Scenarios,3.0,"low,base,high"
+Workload types,2.0,"inf,train"
+Inference eligible links,19.0,latency-restricted
+Training eligible links,44.0,looser eligibility
+Expected demand,1252.1074139769837,scaled service units

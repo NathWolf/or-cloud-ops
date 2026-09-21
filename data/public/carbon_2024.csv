@@ -1,0 +1,9 @@
+country,year,value,unit,source,source_url,retrieved
+Finland,2024,66.75,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+France,2024,40.49,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+Germany,2024,337.12,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+Ireland,2024,270.91,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+Netherlands,2024,250.72,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+Poland,2024,608.36,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+Spain,2024,146.22,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21
+Sweden,2024,34.91,gCO2/kWh,Ember yearly electricity data,https://files.ember-energy.org/public-downloads/yearly_full_release_long_format.csv,2026-09-21

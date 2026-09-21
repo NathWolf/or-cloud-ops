@@ -1,0 +1,16 @@
+{
+  "python": "3.12.14",
+  "gurobi": "12.0.3",
+  "threads": 1,
+  "mip_gap": 0,
+  "objective": "sum of positive carbon and four seasonal-water excesses divided by their own targets; equal weights",
+  "reference_sha256": {
+    "instance.json": "0854d773d8b6e17fdb4478b656fd07435cbbd27308e92d663de3f46374e2f0bf",
+    "solutions/baseline.json": "a77b5339516c8cf2de2fb4e1206027d275551b50f27a7bfe75e82514f41c7176"
+  },
+  "source_sha256": {
+    "scripts/run_handoff_diagnostics.py": "7bf9b074a72532435c6d1c2d647e487d3cebf92fad2b6275fee4bc83696b1fb7",
+    "src/models/hierarchical.py": "b6c64afeab6d079d6c044b4959c7fd1355c0b9da4b48279b0ad2e178c9e66d44",
+    "src/contract_audit.py": "882876e32b44ad315404ec87d252ceb8b6c1b78e22fc06642e49c14ef84614cf"
+  }
+}

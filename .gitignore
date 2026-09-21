@@ -207,11 +207,13 @@ marimo/_lsp/
 __marimo__/
 
 # Project-specific: Generated results and data
-results/
-data/
-
-# LaTeX folder (project-specific)
-latex/
+/results/
+/data/*
+!/data/public/
+/data/public/*
+!/data/public/carbon_2024.csv
+!/data/public/provenance.json
+!/data/public/README.md
 
 # Plots script (project-specific)
 plots.py
@@ -230,3 +232,29 @@ plots.py
 # results/figures/
 # results/tables/
 # data/*.json
+
+# Local environments, credentials and caches
+.venv*/
+.env.*
+*.lic
+*.pem
+*.key
+._*
+
+# Private editorial correspondence and working manuscripts
+/editor_email.md
+/response_to_reviewers_draft.md
+/EJDP_revision_blueprint.md
+/latex/*
+!/latex/fig/
+/latex/fig/*
+!/latex/fig/fig_revision_*.pdf
+!/latex/fig/fig_revision_*.png
+!/latex/fig/results_numbers.tex
+!/latex/fig/table_revision_*.tex
+!/latex/fig/figure_commitments.csv
+!/latex/fig/figure_target_use.csv
+!/latex/fig/figure_tradeoffs.csv
+
+# Prepared distribution archives
+/release/

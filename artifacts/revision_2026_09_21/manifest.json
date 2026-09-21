@@ -1,0 +1,30 @@
+{
+  "quick": false,
+  "seed": 11,
+  "legacy_synthetic": false,
+  "calibration_status": "public_carbon_with_synthetic_operations",
+  "actual_public_data_found": true,
+  "outputs": [
+    "accounting_experiments.csv",
+    "allocation_by_site_workload.csv",
+    "binding_constraints.csv",
+    "cap_sweep.csv",
+    "compact_sensitivity.csv",
+    "data_construction.csv",
+    "eligibility_experiments.csv",
+    "handoff_audit.csv",
+    "instance_summary.csv",
+    "kpi_summary.csv",
+    "planning_regime_comparison.csv",
+    "seed_sensitivity.csv",
+    "shadow_prices.csv",
+    "site_selection.csv",
+    "stress_tests.csv",
+    "verification.csv"
+  ],
+  "supplement_outputs": [
+    "supplement/price_cap_equivalence.csv",
+    "supplement/price_sweep.csv",
+    "supplement/water_experiments.csv"
+  ]
+}

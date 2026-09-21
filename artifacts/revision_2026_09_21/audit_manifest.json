@@ -1,0 +1,15 @@
+{
+  "python": "3.13.12",
+  "platform": "Linux-6.14.0-37-generic-x86_64-with-glibc2.41",
+  "gurobi": "13.0.2",
+  "threads": 1,
+  "mip_gap_requested": 0.0,
+  "public_data_sha256": "0ead490c7105d908843ef4f5ad21e051eaee7f1a5b7c28abec31ad26e12992c6",
+  "source_sha256": {
+    "src/models/hierarchical.py": "b6c64afeab6d079d6c044b4959c7fd1355c0b9da4b48279b0ad2e178c9e66d44",
+    "src/contract_audit.py": "882876e32b44ad315404ec87d252ceb8b6c1b78e22fc06642e49c14ef84614cf",
+    "scripts/run_revision_audit.py": "a132ce8d90d30b11b4d2b004a380021ab977b4417ff8209c3a1cda3f46738648"
+  },
+  "publication_note": "The host name was omitted and the audit-script path made repository-relative. Scientific results, software versions and recorded source hashes are unchanged.",
+  "original_manifest_sha256": "52be395925cb22604a6df184659e09d1d1ca78bb29cf8ddea370bc56c4a66af2"
+}
