@@ -27,10 +27,21 @@ jobs:
         run: |
           python scripts/check_release.py
           python scripts/verify_revision.py artifacts/revision_2026_09_21
+          python scripts/run_commitment_review.py --verify-only --output-dir artifacts/commitment_review_2026_09_21
       - name: Run the small smoke instance
         # Uses the restricted small-model license bundled with gurobipy.
         # No solver credentials or repository secrets are required.
         run: python scripts/run_all.py --quick
+      - name: Reproduce commitment-revision cases
+        run: |
+          python scripts/run_commitment_review.py --output-dir results/commitment_review_ci
+          python - <<'PYTHON'
+          import pandas as pd
+          reference = pd.read_csv('artifacts/commitment_review_2026_09_21/commitment_review.csv').set_index(['seed', 'case'])
+          reproduced = pd.read_csv('results/commitment_review_ci/commitment_review.csv').set_index(['seed', 'case'])
+          assert (reference.status == reproduced.status).all()
+          assert (reference.economic_cost - reproduced.economic_cost).abs().max() < 1e-6
+          PYTHON
       - name: Install figure-rendering dependencies
         run: |
           sudo apt-get update

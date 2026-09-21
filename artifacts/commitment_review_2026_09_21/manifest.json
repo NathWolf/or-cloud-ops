@@ -1,0 +1,13 @@
+{
+  "python": "3.13.12",
+  "gurobi": "13.0.2",
+  "threads": 1,
+  "mip_gap": 0,
+  "scope": "Pre-approval reoptimization; excludes sunk and conversion costs",
+  "source_sha256": {
+    "src/models/hierarchical.py": "b6c64afeab6d079d6c044b4959c7fd1355c0b9da4b48279b0ad2e178c9e66d44",
+    "src/contract_audit.py": "882876e32b44ad315404ec87d252ceb8b6c1b78e22fc06642e49c14ef84614cf",
+    "scripts/run_commitment_review.py": "8d367699dee64bb440fd639ffa57a7f1acdad890d4cfa88b78688c10399f3175"
+  },
+  "input_sha256": "0854d773d8b6e17fdb4478b656fd07435cbbd27308e92d663de3f46374e2f0bf"
+}

@@ -17,7 +17,8 @@ def main():
         'data/public/carbon_2024.csv', 'data/public/provenance.json',
         'src/models/hierarchical.py', 'src/contract_audit.py',
         'scripts/run_all.py', 'scripts/verify_revision.py',
-        'scripts/export_revision.py', '.github/workflows/reproducibility.yml',
+        'scripts/export_revision.py', 'scripts/run_commitment_review.py',
+        'artifacts/commitment_review_2026_09_21/SHA256SUMS.json', '.github/workflows/reproducibility.yml',
     ]
     for name in required:
         if not (ROOT / name).is_file():

@@ -9,7 +9,7 @@ Run commands from the repository root. The frozen reference archive is `artifact
 | Main experiment grid | `python scripts/run_hierarchical_experiments.py --require-public-data --output-dir results/revision_2026_09_21` | Regimes, price/cap sweeps, accounting comparisons and saved solutions |
 | Contract and uncertainty audit | `python scripts/run_revision_audit.py --results-dir results/revision_2026_09_21` | Frozen-plan, scenario-wise, stress and seed tests |
 | Independent checks | `python scripts/verify_revision.py results/revision_2026_09_21` | Fail-fast residual, objective and comparison assertions |
-| Figure/table export | `python scripts/export_revision.py --results-dir results/revision_2026_09_21 --output-dir results/reproduced_figures` | Three PDF/PNG figures with plotted-value CSVs, three tables and numerical LaTeX macros |
+| Figure/table export | `python scripts/export_revision.py --results-dir results/revision_2026_09_21 --output-dir results/reproduced_figures` | Two main figures and one supplementary figure with plotted-value CSVs, four tables and numerical LaTeX macros |
 
 `python scripts/run_all.py --figure-dir results/reproduced_figures` runs all four steps. `--quick` uses a smaller instance and does not run the full audit or export figures. Its results do not support the manuscript's numerical claims.
 
@@ -46,8 +46,16 @@ Carbon factors come from Ember; operational inputs are constructed. Water is ass
 
 ## Reading the figures
 
-1. **Infrastructure and allocation:** paired points compare cost-only and expected-target capacity commitments and training allocations by city. Capacity is per period; training allocation is the expected total across four periods. The selected sites and inference allocations are unchanged.
-2. **Cost and target interpretation:** four rows compare cost-only, expected-target, internal-price and scenario-wise plans. Cost excludes internal impact charges. Target-use points show expected and worst-scenario ratios; water additionally takes the maximum over seasons. Connecting lines are comparisons, not statistical uncertainty intervals.
-3. **Carbon and water trade-offs:** the carbon-only sweep and joint expected-target plan are plotted against achieved carbon reduction. Water use can rise under a carbon-only limit. Lines between solved plans do not establish feasibility at intermediate values.
+1. **Supplementary Figure S1, infrastructure and allocation:** paired points compare cost-only and expected-target capacity commitments and training allocations by city. Capacity is per period; training allocation is the expected total across four periods. The selected sites and inference allocations are unchanged.
+2. **Main Figure 1, cost and target interpretation:** four rows compare cost-only, expected-target, internal-price and scenario-wise plans. Cost excludes internal impact charges. Target-use points show expected and worst-scenario ratios; water additionally takes the maximum over seasons. Connecting lines are comparisons, not statistical uncertainty intervals.
+3. **Main Figure 2, carbon and water trade-offs:** the carbon-only sweep and joint expected-target plan are plotted against achieved carbon reduction. Water use can rise under a carbon-only limit. Lines between solved plans do not establish feasibility at intermediate values.
 
 The exporter writes `figure_commitments.csv`, `figure_target_use.csv` and `figure_tradeoffs.csv` with the plotted values. It recomputes scenario-water ratios from saved flows and checks the target ratios against the archived audit. Figures retain the same filenames so manuscript builds remain reproducible.
+
+## Which commitments need revision?
+
+`python scripts/run_commitment_review.py --output-dir results/commitment_review` solves five cases for each of seeds 11–20: allocation only; capacity plus allocation; links plus allocation; capacity and links plus allocation with sites fixed; and unrestricted planning. Every case retains the same service obligations and expected carbon/seasonal-water targets. The cost-only solution supplies all fixed values. Costs are pre-approval planning costs, not retrofit costs; sunk and conversion costs are excluded.
+
+The reference is `artifacts/commitment_review_2026_09_21/`. Local Gurobi 12.0.3 and OVH Gurobi 13.0.2 agree on all 50 statuses and on feasible objective values within 1e-8. Neither capacity nor links alone restores feasibility in any seed. Reopening both reaches the unrestricted optimum without changing sites. In the reference solution, four links are added and three removed; the net link count masks this revision.
+
+Verify saved cases with `python scripts/run_commitment_review.py --verify-only --output-dir artifacts/commitment_review_2026_09_21`. This recomputes residuals and targets, checks fixed decisions and the objective ordering under nested revision scopes, and verifies checksums. Infeasible statuses still require solving to reproduce. The full `run_all.py` pipeline includes these tests; `export_revision.py --commitment-dir PATH` selects their outputs for the main table. The original September experiment archive is unchanged.

@@ -39,13 +39,15 @@ python scripts/verify_revision.py artifacts/revision_2026_09_21
 
 The first command checks archive integrity, required release files and the calibration input. The second recomputes feasibility, objectives and environmental impacts for 78 feasible saved solutions, checks the recorded infeasible statuses, and validates cap, handoff and accounting invariants. It does not re-solve the models or independently prove the saved infeasibility certificates.
 
-To regenerate the three vector figures, tables and numerical LaTeX macros **without solving**:
+To regenerate the two main figures, supplementary allocation figure, tables and numerical LaTeX macros **without solving**:
 
 ```sh
 MPLCONFIGDIR=results/.mplcache python scripts/export_revision.py \
   --results-dir artifacts/revision_2026_09_21 \
   --output-dir results/reproduced_figures
 ```
+
+The reference commitment-revision tests are in `artifacts/commitment_review_2026_09_21/`; see [the experiment guide](docs/EXPERIMENTS.md) for verification and rerun commands.
 
 The reference figures are in [`latex/fig/`](latex/fig/), with filenames starting `fig_revision_`. Older tracked figures correspond to the earlier one-period illustration.
 

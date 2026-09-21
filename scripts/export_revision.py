@@ -25,7 +25,7 @@ def table(out,name,caption,label,cols,rows,spec,note=''):
  (out/(name+'.tex')).write_text('\n'.join(text)+'\n')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--results-dir',default='artifacts/revision_2026_09_21');p.add_argument('--output-dir',required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--results-dir',default='artifacts/revision_2026_09_21');p.add_argument('--output-dir',required=True);p.add_argument('--commitment-dir',default='artifacts/commitment_review_2026_09_21');a=p.parse_args()
  root=Path(a.results_dir);out=Path(a.output_dir);out.mkdir(parents=True,exist_ok=True)
  regimes=pd.read_csv(root/'planning_regime_comparison.csv'); audit=pd.read_csv(root/'handoff_audit.csv');seed=pd.read_csv(root/'seed_sensitivity.csv');cap=pd.read_csv(root/'cap_sweep.csv');acc=pd.read_csv(root/'accounting_experiments.csv');duals=pd.read_csv(root/'shadow_prices.csv')
  b=regimes.iloc[0];h=regimes.iloc[2];price=regimes.iloc[3];robust=audit[audit.experiment=='Scenario-wise targets / replan'].iloc[0]
@@ -41,6 +41,24 @@ def main():
  table(out,'table_revision_regimes','Planning and downstream acceptance under common expected targets.','tab:regimes',
  ['Regime','Cost','Carbon','Water','C target','W target'],rows,'lrrrrr',
  'Cost is in normalized planning units; carbon is in kg CO$_2$-equivalent electricity-impact proxy and water in assumed litres. C/W tests use expected carbon and each expected seasonal-water target. The scenario-wise row also satisfies every modeled scenario. Infeasible means no compliant allocation exists for fixed sites, capacity and links; it is not a solver timeout.')
+ review=pd.read_csv(Path(a.commitment_dir)/'commitment_review.csv')
+ reference=review[review.seed==11].set_index('case')
+ labels_review=[('Allocation only','allocation_only',r'$x,K,g$'),
+                ('Capacity and allocation','capacity_only',r'$x,g$'),
+                ('Links and allocation','links_only',r'$x,K$'),
+                ('Capacity, links and allocation','capacity_and_links',r'$x$'),
+                ('All decisions','all_decisions','None')]
+ rows=[]
+ for label,case,fixed in labels_review:
+  r=reference.loc[case];samples=review[review.case==case]
+  rows.append([label,fixed,'Feasible' if r.status==2 else 'Infeasible',
+               f'{r.cost_increase_pct:.3f}'+r'\%' if r.status==2 else '--',
+               f'{int((samples.status==2).sum())}/{len(samples)}'])
+ table(out,'table_revision_commitments','Which decisions must be reopened before approval?','tab:commitment-review',
+       ['Decisions reopened','Fixed','Reference case','Cost increase','Feasible seeds'],rows,'llrrr',
+       'Each test starts from the cost-only plan and retains the same expected carbon and seasonal-water targets. '+
+       'Cost increases use the original planning objective and exclude sunk, conversion and transition costs. '+
+       'The ten seeds perturb demand within one constructed network; they are not independent field cases.')
  labels={'location_time':'Seasonal, unadjusted','location_annual':'Annual, unadjusted','market_time':'Seasonal, adjusted','market_annual':'Annual, adjusted'}
  rows=[]
  for _,r in acc[acc.accounting_experiment=='cap_85'].iterrows():

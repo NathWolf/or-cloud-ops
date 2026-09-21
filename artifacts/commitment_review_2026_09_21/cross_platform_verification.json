@@ -1,0 +1,12 @@
+{
+  "local_gurobi": "12.0.3",
+  "remote_gurobi": "13.0.2",
+  "cases": 50,
+  "statuses_equal": true,
+  "max_absolute_differences": {
+    "economic_cost": 5.4569682106375694e-12,
+    "cost_increase_pct": 2.446931546273845e-13,
+    "expected_carbon_ratio": 5.440092820663267e-15,
+    "expected_water_ratio": 4.551914400963142e-15
+  }
+}
