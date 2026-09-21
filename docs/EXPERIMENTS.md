@@ -59,3 +59,34 @@ The exporter writes `figure_commitments.csv`, `figure_target_use.csv` and `figur
 The reference is `artifacts/commitment_review_2026_09_21/`. Local Gurobi 12.0.3 and OVH Gurobi 13.0.2 agree on all 50 statuses and on feasible objective values within 1e-8. Neither capacity nor links alone restores feasibility in any seed. Reopening both reaches the unrestricted optimum without changing sites. In the reference solution, four links are added and three removed; the net link count masks this revision.
 
 Verify saved cases with `python scripts/run_commitment_review.py --verify-only --output-dir artifacts/commitment_review_2026_09_21`. This recomputes residuals and targets, checks fixed decisions and the objective ordering under nested revision scopes, and verifies checksums. Infeasible statuses still require solving to reproduce. The full `run_all.py` pipeline includes these tests; `export_revision.py --commitment-dir PATH` selects their outputs for the main table. The original September experiment archive is unchanged.
+
+## Interpreting the commitment table
+
+“Runs meeting targets” counts feasible planning problems, not successful software executions. A seed selects a reproducible demand perturbation of at most 1.5%; it is not a separate observed network. For each seed, the cost-only solution supplies the fixed commitments and the reference impacts. Every revision case must serve the same demand while reducing expected carbon by 15% and expected water by 10% in each season.
+
+- **Allocation only:** sites, capacity and links remain fixed. No compliant allocation exists in any of the ten runs.
+- **Capacity and allocation:** links remain fixed, so more capacity cannot create access to another site. All ten cases are infeasible.
+- **Links and allocation:** site capacities remain fixed, so additional links cannot increase the receiving site's capacity. All ten cases are infeasible.
+- **Capacity, links and allocation:** sites remain fixed. All ten cases meet the targets and attain the unrestricted planning cost.
+- **All decisions:** all infrastructure choices can change. All ten cases meet the targets; allowing site changes brings no further cost reduction.
+
+The saved infeasible cases have solver status 3 (`INFEASIBLE`), not a time-limit status. The result identifies a restricted revision scope that cannot meet the chosen targets. It does not establish that both types of revision are necessary for every network or target.
+
+## Assumed accounting-factor reductions
+
+The accounting sensitivity multiplies each original site carbon factor by the factor below, in every season and scenario. For example, Paris uses 0.74 times its original factor, a 26% reduction. The table names the sites explicitly; no positional ordering is needed.
+
+| Site ID | Representative city | Multiplier | Assumed reduction |
+| --- | --- | ---: | ---: |
+| C1 | Paris | 0.74 | 26% |
+| C2 | Frankfurt | 0.78 | 22% |
+| C3 | Amsterdam | 0.76 | 24% |
+| C4 | Dublin | 0.72 | 28% |
+| S1 | Stockholm | 0.42 | 58% |
+| S2 | Warsaw | 0.70 | 30% |
+| S3 | Madrid | 0.55 | 45% |
+| S4 | Helsinki | 0.40 | 60% |
+
+These exact multipliers are hard-coded illustrative assumptions in `make_public_calibrated_hierarchical_instance`; they are not estimated from Ember data, procurement contracts or OVHcloud records. No empirical interpretation attaches to their ordering or differences. They must not be interpreted as measured renewable-electricity shares or verified market-based Scope 2 factors.
+
+The comparison asks whether changing the accounting coefficients changes the plan's apparent compliance under the same numerical carbon cap. It holds demand and physical constraints fixed, reoptimizes under the chosen coefficients, and then evaluates each solution with the original seasonal coefficients. The reduced-factor cases recover the cost-only plan. This illustrates dependence on accounting definitions; it does not demonstrate procurement effectiveness or measured emissions reductions. Seasonal versus annual averaging is a separate comparison using the original coefficients.

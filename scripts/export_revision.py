@@ -53,7 +53,7 @@ def main():
                f'{r.cost_increase_pct:.3f}'+r'\%' if r.status==2 else '--',
                f'{int((samples.status==2).sum())}/{len(samples)}'])
  table(out,'table_revision_commitments','Feasibility after revising infrastructure decisions.','tab:commitment-review',
-       ['Decisions reopened','Fixed','Reference case','Cost increase','Feasible seeds'],rows,'llrrr')
+       ['Decisions reopened','Fixed','Reference case','Cost increase','Runs meeting targets'],rows,'llrrr')
  labels={'location_time':'Seasonal, unadjusted','location_annual':'Annual, unadjusted','market_time':'Seasonal, adjusted','market_annual':'Annual, adjusted'}
  rows=[]
  for _,r in acc[acc.accounting_experiment=='cap_85'].iterrows():
