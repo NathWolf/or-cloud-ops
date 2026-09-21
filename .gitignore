@@ -252,6 +252,9 @@ plots.py
 !/latex/fig/fig_revision_*.png
 !/latex/fig/results_numbers.tex
 !/latex/fig/table_revision_*.tex
+!/latex/fig/figure_commitments.csv
+!/latex/fig/figure_target_use.csv
+!/latex/fig/figure_tradeoffs.csv
 
 # Prepared distribution archives
 /release/
